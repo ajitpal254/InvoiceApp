@@ -19,7 +19,6 @@
   --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.hidden { display: none !important; }
 
 /* Modal */
 .modal-overlay {
@@ -330,3 +329,5 @@ select {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--surface-hover);
 }
+
+.hidden { display: none !important; }
