@@ -1,4 +1,4 @@
-import express from 'express';
+﻿import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -61,15 +61,15 @@ async function sendVerificationEmail(email, token) {
   try {
     if (process.env.SMTP_USER) {
       await transporter.sendMail(mailOptions);
-      console.log('📧 Real email sent via Brevo SMTP to:', email);
+      console.log('≡ƒôº Real email sent via Brevo SMTP to:', email);
     } else {
       console.log('-----------------------------------------');
-      console.log('📧 (MOCK) SMTP CONFIG MISSING. LOGGING LINK:');
-      console.log('🔗 VERIFICATION LINK:', verifyUrl);
+      console.log('≡ƒôº (MOCK) SMTP CONFIG MISSING. LOGGING LINK:');
+      console.log('≡ƒöù VERIFICATION LINK:', verifyUrl);
       console.log('-----------------------------------------');
     }
   } catch (error) {
-    console.error('❌ SMTP Error:', error.message);
+    console.error('Γ¥î SMTP Error:', error.message);
   }
 }
 
@@ -88,8 +88,8 @@ const authenticate = (req, res, next) => {
 
 // Database Connection
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('✅ Connected to MongoDB Atlas'))
-  .catch(err => console.error('❌ MongoDB Connection Error:', err));
+  .then(() => console.log('Γ£à Connected to MongoDB Atlas'))
+  .catch(err => console.error('Γ¥î MongoDB Connection Error:', err));
 
 // --- Auth Routes ---
 
@@ -201,5 +201,5 @@ app.delete('/api/invoices/:id', authenticate, async (req, res) => {
 
 // Start Server
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`≡ƒÜÇ Server running on http://localhost:${PORT}`);
 });
