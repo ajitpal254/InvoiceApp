@@ -125,6 +125,11 @@ function bindEvents() {
   });
 
   elements.authBtn.addEventListener('click', async () => {
+    const btnText = elements.authBtn.textContent;
+    elements.authBtn.disabled = true;
+    elements.authBtn.textContent = auth.isSignup ? 'Creating Account...' : 'Signing In...';
+    elements.authError.classList.add('hidden');
+
     try {
       if (auth.isSignup) {
         const payload = {
@@ -153,6 +158,9 @@ function bindEvents() {
     } catch (err) {
       elements.authError.textContent = err.message;
       elements.authError.classList.remove('hidden');
+    } finally {
+      elements.authBtn.disabled = false;
+      elements.authBtn.textContent = btnText;
     }
   });
 
