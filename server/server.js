@@ -1,4 +1,4 @@
-﻿import express from 'express';
+import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -7,8 +7,6 @@ import nodemailer from 'nodemailer';
 import crypto from 'crypto';
 import User from './models/User.js';
 import Invoice from './models/Invoice.js';
-
-dotenv.config();
 
 dotenv.config();
 
@@ -23,7 +21,12 @@ const transporter = nodemailer.createTransport({
 });
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || (process.env.NODE_ENV === 'production' ? null : 5000);
+
+if (!PORT) {
+  console.error('❌ PORT environment variable is required in production.');
+  process.exit(1);
+}
 
 // Middleware
 const allowedOrigins = [process.env.FRONTEND_URL, 'http://localhost:5173', 'http://localhost:5000'];
@@ -201,5 +204,5 @@ app.delete('/api/invoices/:id', authenticate, async (req, res) => {
 
 // Start Server
 app.listen(PORT, () => {
-  console.log(`≡ƒÜÇ Server running on http://localhost:${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
