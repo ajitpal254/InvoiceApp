@@ -29,16 +29,28 @@ if (!PORT) {
 }
 
 // Middleware
-const allowedOrigins = [process.env.FRONTEND_URL, 'http://localhost:5173', 'http://localhost:5000'];
-app.use(cors({
+const allowedOrigins = [
+  ...( process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(',').map(o => o.trim()) : [] ),
+  'http://localhost:5173',
+  'http://localhost:5000'
+];
+
+const corsOptions = {
   origin: function(origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.warn('❌ CORS blocked origin:', origin);
       callback(new Error('Not allowed by CORS'));
     }
-  }
-}));
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // Handle preflight for all routes
 app.use(express.json());
 
 // Verification Email Function
