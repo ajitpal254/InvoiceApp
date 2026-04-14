@@ -3,22 +3,11 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
-import nodemailer from 'nodemailer';
 import crypto from 'crypto';
 import User from './models/User.js';
 import Invoice from './models/Invoice.js';
 
 dotenv.config();
-
-// SMTP Transporter (Brevo)
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: process.env.SMTP_PORT,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_KEY || process.env.SMTP_PASS,
-  },
-});
 
 const app = express();
 const PORT = process.env.PORT || (process.env.NODE_ENV === 'production' ? null : 5000);
@@ -53,40 +42,70 @@ app.use(cors(corsOptions));
 app.options('*', cors(corsOptions)); // Handle preflight for all routes
 app.use(express.json());
 
-// Verification Email Function
+// Verification Email via Brevo HTTP API (avoids SMTP port blocking on cloud hosts)
 async function sendVerificationEmail(email, token) {
-  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+  const frontendUrl = process.env.FRONTEND_URL
+    ? process.env.FRONTEND_URL.split(',')[0].trim()
+    : 'http://localhost:5173';
   const verifyUrl = `${frontendUrl}/verify?token=${token}`;
-  
-  const mailOptions = {
-    to: email,
-    from: `"Ouvra Billing" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`, 
-    subject: 'Verify your Ouvra Billing Account',
-    text: `Hello! Please verify your account by clicking this link: ${verifyUrl}`,
-    html: `
-      <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;">
-        <h2 style="color: #10b981;">Welcome to Ouvra Billing</h2>
-        <p>You're almost there! Click the button below to verify your email and start saving your invoices to the cloud.</p>
-        <a href="${verifyUrl}" style="display: inline-block; padding: 12px 24px; background: #10b981; color: white; text-decoration: none; border-radius: 6px; font-weight: 600; margin-top: 16px;">Verify Email</a>
-        <p style="margin-top: 24px; font-size: 12px; color: #64748b;">If you didn't create an account, you can safely ignore this email.</p>
-      </div>
-    `,
-  };
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;">
+      <h2 style="color: #10b981;">Welcome to Ouvra Billing</h2>
+      <p>You're almost there! Click the button below to verify your email and start saving your invoices to the cloud.</p>
+      <a href="${verifyUrl}" style="display: inline-block; padding: 12px 24px; background: #10b981; color: white; text-decoration: none; border-radius: 6px; font-weight: 600; margin-top: 16px;">Verify Email</a>
+      <p style="margin-top: 24px; font-size: 12px; color: #64748b;">If you didn't create an account, you can safely ignore this email.</p>
+    </div>
+  `;
+
+  if (!process.env.BREVO_API_KEY) {
+    console.log('-----------------------------------------');
+    console.log('📧 (MOCK) BREVO_API_KEY missing. Logging link:');
+    console.log('🔗 VERIFICATION LINK:', verifyUrl);
+    console.log('-----------------------------------------');
+    return;
+  }
 
   try {
-    if (process.env.SMTP_USER) {
-      await transporter.sendMail(mailOptions);
-      console.log('≡ƒôº Real email sent via Brevo SMTP to:', email);
+    const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'api-key': process.env.BREVO_API_KEY,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        sender: { name: 'Ouvra Billing', email: process.env.SMTP_FROM || process.env.SMTP_USER },
+        to: [{ email }],
+        subject: 'Verify your Ouvra Billing Account',
+        htmlContent: html,
+      }),
+    });
+    if (res.ok) {
+      console.log('📧 Verification email sent via Brevo API to:', email);
     } else {
-      console.log('-----------------------------------------');
-      console.log('≡ƒôº (MOCK) SMTP CONFIG MISSING. LOGGING LINK:');
-      console.log('≡ƒöù VERIFICATION LINK:', verifyUrl);
-      console.log('-----------------------------------------');
+      const err = await res.json();
+      console.error('❌ Brevo API error:', JSON.stringify(err));
     }
   } catch (error) {
-    console.error('Γ¥î SMTP Error:', error.message);
+    console.error('❌ Brevo fetch error:', error.message);
   }
 }
+
+// Health check (also used for keep-alive pings)
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+// Keep-alive: self-ping every 14 min to prevent Render free tier cold starts
+const SELF_URL = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
+setInterval(async () => {
+  try {
+    await fetch(`${SELF_URL}/api/health`);
+    console.log('💓 Keep-alive ping sent');
+  } catch (e) {
+    console.warn('⚠️ Keep-alive ping failed:', e.message);
+  }
+}, 14 * 60 * 1000);
 
 // Auth Middleware
 const authenticate = (req, res, next) => {
