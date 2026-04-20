@@ -50,7 +50,7 @@ export function renderItemsEditor(elements, removeItem, updateItem) {
 }
 
 export function renderPreview(elements) {
-  const { subtotal, taxAmount, grandTotal, taxRate, isExport } = calculateTotals();
+  const { subtotal, discountAmount, taxAmount, grandTotal, taxRate, isExport } = calculateTotals();
   const exportNote = getExportNote();
   const symbol = CURRENCY_SYMBOLS[state.currency] || '$';
   
@@ -78,6 +78,15 @@ export function renderPreview(elements) {
   });
 
   elements.previewSubtotal.textContent = `${symbol}${subtotal.toFixed(2)}`;
+  
+  if (discountAmount > 0) {
+    elements.previewDiscountRow.style.display = 'flex';
+    elements.previewDiscountDesc.textContent = state.discountDesc || 'Discount';
+    elements.previewDiscountAmount.textContent = `-${symbol}${discountAmount.toFixed(2)}`;
+  } else {
+    elements.previewDiscountRow.style.display = 'none';
+  }
+
   elements.previewTaxAmount.textContent = `${symbol}${taxAmount.toFixed(2)}`;
   elements.previewGrandTotal.textContent = `${symbol}${grandTotal.toFixed(2)}`;
 
@@ -99,6 +108,11 @@ export function render(elements, removeItem, updateItem) {
   elements.recipientCountry.value = state.recipientCountry;
   elements.invoiceNumber.value = state.invoiceNumber;
   elements.invoiceDate.value = state.invoiceDate;
+  
+  elements.discountDesc.value = state.discountDesc;
+  elements.discountType.value = state.discountType;
+  elements.discountValue.value = state.discountValue || '';
+
   elements.themeColor.value = state.themeColor;
   elements.colorValue.textContent = state.themeColor.toUpperCase();
   elements.currencySelect.value = state.currency;

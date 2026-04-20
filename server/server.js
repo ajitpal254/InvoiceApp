@@ -1,52 +1,56 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import jwt from 'jsonwebtoken';
-import crypto from 'crypto';
-import User from './models/User.js';
-import Invoice from './models/Invoice.js';
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
+import crypto from "crypto";
+import User from "./models/User.js";
+import Invoice from "./models/Invoice.js";
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || (process.env.NODE_ENV === 'production' ? null : 5000);
+const PORT =
+  process.env.PORT || (process.env.NODE_ENV === "production" ? null : 5000);
 
 if (!PORT) {
-  console.error('❌ PORT environment variable is required in production.');
+  console.error("❌ PORT environment variable is required in production.");
   process.exit(1);
 }
 
 // Middleware
 const allowedOrigins = [
-  ...( process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(',').map(o => o.trim()) : [] ),
-  'http://localhost:5173',
-  'http://localhost:5000'
+  ...(process.env.FRONTEND_URL
+    ? process.env.FRONTEND_URL.split(",").map((o) => o.trim())
+    : []),
+  "http://localhost:5173",
+  "http://localhost:5000",
 ];
 
 const corsOptions = {
-  origin: function(origin, callback) {
+  origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      console.warn('❌ CORS blocked origin:', origin);
-      callback(new Error('Not allowed by CORS'));
+      console.warn("❌ CORS blocked origin:", origin);
+      callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
 
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // Handle preflight for all routes
+app.options("*", cors(corsOptions)); // Handle preflight for all routes
 app.use(express.json());
 
 // Verification Email via Brevo HTTP API (avoids SMTP port blocking on cloud hosts)
 async function sendVerificationEmail(email, token) {
-  const frontendUrl = process.env.FRONTEND_URL
-    ? process.env.FRONTEND_URL.split(',')[0].trim()
-    : 'http://localhost:5173';
+  const frontendUrl =
+    process.env.DEPLOY_ENV === "PROD"
+      ? process.env.FRONTEND_URL.split(",")[0].trim()
+      : "http://localhost:5173";
   const verifyUrl = `${frontendUrl}/verify?token=${token}`;
 
   const html = `
@@ -59,136 +63,176 @@ async function sendVerificationEmail(email, token) {
   `;
 
   if (!process.env.BREVO_API_KEY) {
-    console.log('-----------------------------------------');
-    console.log('📧 (MOCK) BREVO_API_KEY missing. Logging link:');
-    console.log('🔗 VERIFICATION LINK:', verifyUrl);
-    console.log('-----------------------------------------');
+    console.log("-----------------------------------------");
+    console.log("📧 (MOCK) BREVO_API_KEY missing. Logging link:");
+    console.log("🔗 VERIFICATION LINK:", verifyUrl);
+    console.log("-----------------------------------------");
     return;
   }
 
   try {
-    const res = await fetch('https://api.brevo.com/v3/smtp/email', {
-      method: 'POST',
+    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
       headers: {
-        'api-key': process.env.BREVO_API_KEY,
-        'Content-Type': 'application/json',
+        "api-key": process.env.BREVO_API_KEY,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        sender: { name: 'Ouvra Billing', email: process.env.SMTP_FROM || process.env.SMTP_USER },
+        sender: {
+          name: "Ouvra Billing",
+          email: process.env.SMTP_FROM || process.env.SMTP_USER,
+        },
         to: [{ email }],
-        subject: 'Verify your Ouvra Billing Account',
+        subject: "Verify your Ouvra Billing Account",
         htmlContent: html,
       }),
     });
     if (res.ok) {
-      console.log('📧 Verification email sent via Brevo API to:', email);
+      console.log("📧 Verification email sent via Brevo API to:", email);
     } else {
       const err = await res.json();
-      console.error('❌ Brevo API error:', JSON.stringify(err));
+      console.error("❌ Brevo API error:", JSON.stringify(err));
     }
   } catch (error) {
-    console.error('❌ Brevo fetch error:', error.message);
+    console.error("❌ Brevo fetch error:", error.message);
   }
 }
 
 // Health check (also used for keep-alive pings)
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
 // Keep-alive: self-ping every 14 min to prevent Render free tier cold starts
 const SELF_URL = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
-setInterval(async () => {
-  try {
-    await fetch(`${SELF_URL}/api/health`);
-    console.log('💓 Keep-alive ping sent');
-  } catch (e) {
-    console.warn('⚠️ Keep-alive ping failed:', e.message);
-  }
-}, 14 * 60 * 1000);
+setInterval(
+  async () => {
+    try {
+      await fetch(`${SELF_URL}/api/health`);
+      console.log("💓 Keep-alive ping sent");
+    } catch (e) {
+      console.warn("⚠️ Keep-alive ping failed:", e.message);
+    }
+  },
+  14 * 60 * 1000,
+);
 
 // Auth Middleware
 const authenticate = (req, res, next) => {
-  const token = req.headers['authorization']?.split(' ')[1];
-  if (!token) return res.status(401).json({ message: 'Access denied' });
+  const token = req.headers["authorization"]?.split(" ")[1];
+  if (!token) return res.status(401).json({ message: "Access denied" });
   try {
     const verified = jwt.verify(token, process.env.JWT_SECRET);
     req.user = verified;
     next();
   } catch (err) {
-    res.status(400).json({ message: 'Invalid token' });
+    res.status(400).json({ message: "Invalid token" });
   }
 };
 
 // Database Connection
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('Γ£à Connected to MongoDB Atlas'))
-  .catch(err => console.error('Γ¥î MongoDB Connection Error:', err));
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => console.log("Γ£à Connected to MongoDB Atlas"))
+  .catch((err) => console.error("Γ¥î MongoDB Connection Error:", err));
 
 // --- Auth Routes ---
 
-app.post('/api/auth/register', async (req, res) => {
+app.post("/api/auth/register", async (req, res) => {
   try {
-    const { username, email, password, fullName, companyName, address, taxId, country } = req.body;
-    
+    const {
+      username,
+      email,
+      password,
+      fullName,
+      companyName,
+      address,
+      taxId,
+      country,
+    } = req.body;
+
     // Check duplicates
     const existing = await User.findOne({ $or: [{ username }, { email }] });
-    if (existing) return res.status(400).json({ message: 'Username or Email already exists' });
+    if (existing)
+      return res
+        .status(400)
+        .json({ message: "Username or Email already exists" });
 
-    const verificationToken = crypto.randomBytes(32).toString('hex');
-    const user = new User({ 
-      username, email, password, fullName, companyName, address, taxId, country, verificationToken 
+    const verificationToken = crypto.randomBytes(32).toString("hex");
+    const user = new User({
+      username,
+      email,
+      password,
+      fullName,
+      companyName,
+      address,
+      taxId,
+      country,
+      verificationToken,
     });
-    
+
     await user.save();
 
     // Send Verification Email
     await sendVerificationEmail(email, verificationToken);
-    
-    res.status(201).json({ message: 'Registration successful! Please check your email for the verification link.' });
+
+    res
+      .status(201)
+      .json({
+        message:
+          "Registration successful! Please check your email for the verification link.",
+      });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-app.post('/api/auth/login', async (req, res) => {
+app.post("/api/auth/login", async (req, res) => {
   try {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
     if (!user || !(await user.comparePassword(password))) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ message: "Invalid credentials" });
     }
-    const token = jwt.sign({ 
-      id: user._id, 
-      username: user.username,
-      isVerified: user.isVerified 
-    }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    
+    const token = jwt.sign(
+      {
+        id: user._id,
+        username: user.username,
+        isVerified: user.isVerified,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" },
+    );
+
     res.json({ token, username: user.username, isVerified: user.isVerified });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-app.get('/api/auth/verify', async (req, res) => {
+app.get("/api/auth/verify", async (req, res) => {
   try {
     const { token } = req.query;
     const user = await User.findOne({ verificationToken: token });
-    if (!user) return res.status(400).json({ message: 'Invalid or expired token' });
+    if (!user)
+      return res.status(400).json({ message: "Invalid or expired token" });
 
     user.isVerified = true;
     user.verificationToken = undefined;
     await user.save();
-    
-    res.json({ message: 'Email verified successfully! You can now save invoices to the cloud.' });
+
+    res.json({
+      message:
+        "Email verified successfully! You can now save invoices to the cloud.",
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-app.get('/api/auth/profile', authenticate, async (req, res) => {
+app.get("/api/auth/profile", authenticate, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('-password');
+    const user = await User.findById(req.user.id).select("-password");
     res.json(user);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -197,20 +241,26 @@ app.get('/api/auth/profile', authenticate, async (req, res) => {
 
 // --- Invoice Routes ---
 
-app.get('/api/invoices', authenticate, async (req, res) => {
+app.get("/api/invoices", authenticate, async (req, res) => {
   try {
-    const invoices = await Invoice.find({ userId: req.user.id }).sort({ createdAt: -1 });
+    const invoices = await Invoice.find({ userId: req.user.id }).sort({
+      createdAt: -1,
+    });
     res.json(invoices);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-app.post('/api/invoices', authenticate, async (req, res) => {
+app.post("/api/invoices", authenticate, async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
     if (!user.isVerified) {
-      return res.status(403).json({ message: 'Please verify your email to save invoices to the cloud.' });
+      return res
+        .status(403)
+        .json({
+          message: "Please verify your email to save invoices to the cloud.",
+        });
     }
 
     const invoiceData = { ...req.body, userId: req.user.id };
@@ -222,12 +272,15 @@ app.post('/api/invoices', authenticate, async (req, res) => {
   }
 });
 
-app.delete('/api/invoices/:id', authenticate, async (req, res) => {
+app.delete("/api/invoices/:id", authenticate, async (req, res) => {
   try {
-    const invoice = await Invoice.findOne({ _id: req.params.id, userId: req.user.id });
-    if (!invoice) return res.status(404).json({ message: 'Invoice not found' });
+    const invoice = await Invoice.findOne({
+      _id: req.params.id,
+      userId: req.user.id,
+    });
+    if (!invoice) return res.status(404).json({ message: "Invoice not found" });
     await Invoice.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Invoice deleted' });
+    res.json({ message: "Invoice deleted" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

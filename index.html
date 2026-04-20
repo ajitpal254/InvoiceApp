@@ -204,6 +204,20 @@
           </div>
 
           <div class="form-group">
+            <label>Discount</label>
+            <div style="display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 8px;">
+               <input type="text" id="discount-desc" class="glass-input" placeholder="Discount Description (e.g., Holiday Sale)" style="font-size: 12px;">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+               <select id="discount-type" class="glass-input" style="font-size: 12px;">
+                 <option value="amount" selected>Fixed Amount</option>
+                 <option value="percent">Percentage (%)</option>
+               </select>
+               <input type="number" id="discount-value" class="glass-input" placeholder="Value" style="font-size: 12px;" min="0">
+            </div>
+          </div>
+
+          <div class="form-group">
             <label>Notes / Terms</label>
             <textarea id="invoice-notes" rows="2"></textarea>
           </div>
@@ -271,6 +285,10 @@
               <div style="display: flex; justify-content: space-between; padding: 4px 0;">
                 <span style="color: #64748b;">Subtotal</span>
                 <span id="display-subtotal"></span>
+              </div>
+              <div id="display-discount-row" style="display: none; justify-content: space-between; padding: 4px 0; color: #10b981;">
+                <span id="display-discount-desc">Discount</span>
+                <span id="display-discount-amount"></span>
               </div>
               <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #f1f5f9;">
                 <span style="color: #64748b;">Tax (<span id="display-tax-rate"></span>%)</span>

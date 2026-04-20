@@ -134,7 +134,7 @@ label {
   letter-spacing: 0.05em;
 }
 
-input, textarea {
+input, textarea, select {
   width: 100%;
   background: rgba(0, 0, 0, 0.2);
   border: 1px solid var(--border);
@@ -158,6 +158,11 @@ select {
   background-repeat: no-repeat;
   background-position: right 12px center;
   padding-right: 40px !important;
+}
+
+option {
+  background: var(--bg-secondary);
+  color: white;
 }
 
 .btn {

@@ -35,6 +35,9 @@ const elements = {
   invoiceDate: document.getElementById('invoice-date'),
   itemsEditor: document.getElementById('items-editor-list'),
   addBtn: document.getElementById('add-item-btn'),
+  discountDesc: document.getElementById('discount-desc'),
+  discountType: document.getElementById('discount-type'),
+  discountValue: document.getElementById('discount-value'),
   themeColor: document.getElementById('theme-color'),
   currencySelect: document.getElementById('currency-select'),
   notesInput: document.getElementById('invoice-notes'),
@@ -49,6 +52,9 @@ const elements = {
   previewInvoiceNumber: document.getElementById('display-invoice-number'),
   previewDate: document.getElementById('display-invoice-date'),
   previewSubtotal: document.getElementById('display-subtotal'),
+  previewDiscountRow: document.getElementById('display-discount-row'),
+  previewDiscountDesc: document.getElementById('display-discount-desc'),
+  previewDiscountAmount: document.getElementById('display-discount-amount'),
   previewTaxRate: document.getElementById('display-tax-rate'),
   previewTaxAmount: document.getElementById('display-tax-amount'),
   previewGrandTotal: document.getElementById('display-grand-total'),
@@ -194,6 +200,11 @@ function bindEvents() {
   elements.provinceSelect.addEventListener('change', e => sync('province', e.target.value));
   elements.invoiceNumber.addEventListener('input', e => sync('invoiceNumber', e.target.value));
   elements.invoiceDate.addEventListener('input', e => sync('invoiceDate', e.target.value));
+  
+  elements.discountDesc.addEventListener('input', e => sync('discountDesc', e.target.value));
+  elements.discountType.addEventListener('change', e => sync('discountType', e.target.value));
+  elements.discountValue.addEventListener('input', e => sync('discountValue', parseFloat(e.target.value) || 0));
+
   elements.themeColor.addEventListener('input', e => { 
     state.themeColor = e.target.value; 
     elements.colorValue.textContent = e.target.value.toUpperCase();

@@ -13,10 +13,21 @@ export function calculateTotals() {
   }
   
   const subtotal = state.items.reduce((sum, item) => sum + (item.qty * item.price), 0);
-  const taxAmount = subtotal * (taxRate / 100);
-  const grandTotal = subtotal + taxAmount;
+  
+  let discountAmount = 0;
+  if (state.discountValue > 0) {
+    if (state.discountType === 'percent') {
+      discountAmount = subtotal * (state.discountValue / 100);
+    } else {
+      discountAmount = parseFloat(state.discountValue) || 0;
+    }
+  }
 
-  return { subtotal, taxAmount, grandTotal, taxRate, isExport };
+  const discountedSubtotal = subtotal - discountAmount;
+  const taxAmount = discountedSubtotal * (taxRate / 100);
+  const grandTotal = discountedSubtotal + taxAmount;
+
+  return { subtotal, discountAmount, taxAmount, grandTotal, taxRate, isExport };
 }
 
 export function getExportNote() {

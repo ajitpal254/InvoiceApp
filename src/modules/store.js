@@ -15,7 +15,10 @@ export let state = {
   currency: 'CAD',
   notes: '',
   paymentInfo: '',
-  companyName: 'Lumina Solutions'
+  companyName: 'Lumina Solutions',
+  discountDesc: '',
+  discountType: 'amount',
+  discountValue: 0
 };
 
 export let auth = {
@@ -69,5 +72,8 @@ export function resetState() {
   state.notes = '';
   state.paymentInfo = '';
   state.companyName = 'Lumina Solutions';
+  state.discountDesc = '';
+  state.discountType = 'amount';
+  state.discountValue = 0;
   saveLocalState();
 }
