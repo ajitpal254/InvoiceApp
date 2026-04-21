@@ -121,7 +121,7 @@
         <section class="editor-section">
           <div class="glass-card" style="margin-bottom: 24px; padding: 16px;">
             <label style="font-size: 11px; margin-bottom: 12px; display: block;">Preferences</label>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
               <div class="form-group" style="margin-bottom: 0;">
                 <label style="font-size: 10px;">Accent Color</label>
                 <div style="display: flex; gap: 8px; align-items: center;">
@@ -141,6 +141,13 @@
                   <option value="BDT">BDT (৳)</option>
                   <option value="LKR">LKR (₨)</option>
                   <option value="MYR">MYR (RM)</option>
+                </select>
+              </div>
+              <div class="form-group" style="margin-bottom: 0;">
+                <label style="font-size: 10px;">Unit Type</label>
+                <select id="unit-type" class="glass-input" style="padding: 6px; font-size: 12px;">
+                  <option value="Qty" selected>Qty</option>
+                  <option value="Hrs">Hrs</option>
                 </select>
               </div>
             </div>
@@ -272,7 +279,7 @@
             <thead>
               <tr>
                 <th>Description</th>
-                <th style="text-align: center;">Qty</th>
+                <th id="display-unit-header" style="text-align: center;">Qty</th>
                 <th style="text-align: right;">Price</th>
                 <th style="text-align: right;">Total</th>
               </tr>
@@ -291,7 +298,7 @@
                 <span id="display-discount-amount"></span>
               </div>
               <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #f1f5f9;">
-                <span style="color: #64748b;">Tax (<span id="display-tax-rate"></span>%)</span>
+                <span id="display-tax-rate" style="color: #64748b;">Tax</span>
                 <span id="display-tax-amount"></span>
               </div>
               <div style="display: flex; justify-content: space-between; padding: 16px 0;">

@@ -11,6 +11,7 @@ export let state = {
   invoiceNumber: '',
   invoiceDate: new Date().toISOString().split('T')[0],
   items: [{ id: Date.now(), description: '', qty: 1, price: 0 }],
+  unitType: 'Qty',
   themeColor: '#10b981',
   currency: 'CAD',
   notes: '',
@@ -67,6 +68,7 @@ export function resetState() {
   state.invoiceNumber = 'INV-' + Math.floor(1000 + Math.random() * 9000);
   state.invoiceDate = new Date().toISOString().split('T')[0];
   state.items = [{ id: Date.now(), description: '', qty: 1, price: 0 }];
+  state.unitType = 'Qty';
   state.themeColor = '#10b981';
   state.currency = 'CAD';
   state.notes = '';

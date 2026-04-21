@@ -29,7 +29,7 @@ export function renderItemsEditor(elements, removeItem, updateItem) {
       <div style="display: flex; flex-direction: column; gap: 8px;">
         <input type="text" placeholder="Description" value="${item.description}" data-id="${item.id}" data-field="description">
         <div style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px;">
-          <input type="number" placeholder="Qty" value="${item.qty}" data-id="${item.id}" data-field="qty">
+          <input type="number" placeholder="${state.unitType || 'Qty'}" value="${item.qty}" data-id="${item.id}" data-field="qty">
           <input type="number" placeholder="Price" value="${item.price}" data-id="${item.id}" data-field="price">
           <button class="btn btn-ghost delete-item" data-id="${item.id}" style="color: var(--danger); padding: 8px;">
             <i data-lucide="trash-2" style="width: 14px;"></i>
@@ -60,7 +60,18 @@ export function renderPreview(elements) {
   elements.previewRecipientInfo.textContent = state.recipientInfo;
   elements.previewInvoiceNumber.textContent = state.invoiceNumber;
   elements.previewDate.textContent = state.invoiceDate;
-  elements.previewTaxRate.textContent = isExport ? 'Export' : `${state.province} (${taxRate}%)`;
+  if (elements.displayUnitHeader) elements.displayUnitHeader.textContent = state.unitType || 'Qty';
+
+  let taxLabel = `${state.province} (${taxRate}%)`;
+  if (state.recipientCountry === 'Canada') {
+    const hstProvinces = ['ON', 'NB', 'NL', 'NS', 'PE'];
+    if (hstProvinces.includes(state.province)) taxLabel = `HST (${taxRate}%)`;
+    else taxLabel = `GST/PST (${taxRate}%)`;
+    
+    // Prefix with province name if it's not too long, as requested by user
+    if (state.province === 'ON') taxLabel = `Ontario HST (${taxRate}%)`;
+  }
+  elements.previewTaxRate.textContent = isExport ? 'Tax (Export)' : taxLabel;
   elements.previewNotes.textContent = state.notes;
   elements.previewPayment.textContent = state.paymentInfo;
 
@@ -116,6 +127,7 @@ export function render(elements, removeItem, updateItem) {
   elements.themeColor.value = state.themeColor;
   elements.colorValue.textContent = state.themeColor.toUpperCase();
   elements.currencySelect.value = state.currency;
+  if (elements.unitType) elements.unitType.value = state.unitType || 'Qty';
   elements.notesInput.value = state.notes;
   elements.paymentInput.value = state.paymentInfo;
 

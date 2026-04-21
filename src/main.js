@@ -147,6 +147,7 @@ function bindEvents() {
     saveLocalState(); 
   });
   elements.currencySelect.addEventListener('change', (e) => sync('currency', e.target.value));
+  if (elements.unitType) elements.unitType.addEventListener('change', (e) => sync('unitType', e.target.value));
   elements.notesInput.addEventListener('input', e => sync('notes', e.target.value));
   elements.paymentInput.addEventListener('input', e => sync('paymentInfo', e.target.value));
   elements.addBtn.addEventListener('click', () => {
