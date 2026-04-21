@@ -23,9 +23,8 @@ export function calculateTotals() {
     }
   }
 
-  const discountedSubtotal = subtotal - discountAmount;
-  const taxAmount = discountedSubtotal * (taxRate / 100);
-  const grandTotal = discountedSubtotal + taxAmount;
+  const taxAmount = subtotal * (taxRate / 100);
+  const grandTotal = subtotal + taxAmount - discountAmount;
 
   return { subtotal, discountAmount, taxAmount, grandTotal, taxRate, isExport };
 }
