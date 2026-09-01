@@ -1,17 +1,24 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
 import { connectDB } from './config/db.js';
 import authRoutes from './routes/auth.js';
 import invoiceRoutes from './routes/invoices.js';
 
 dotenv.config();
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const distPath = path.resolve(__dirname, '../dist');
+
 export const app = express();
 export const PORT = process.env.PORT || 5000;
-export const HOST = process.env.HOST || (process.env.NODE_ENV === 'production' ? '0.0.0.0' : '127.0.0.1');
+export const HOST = '0.0.0.0';
 
-// Permissive CORS for Netlify / local
+// Permissive CORS for web requests & reverse proxies
 app.use(cors({
   origin: true,
   credentials: true
@@ -27,37 +34,47 @@ app.use(async (req, res, next) => {
     next();
   } catch (err) {
     console.error('[DB Middleware Error]:', err);
-    res.status(500).json({ error: 'Database connection failed', details: err.message });
+    if (req.path.startsWith('/api') || req.path.startsWith('/auth') || req.path.startsWith('/invoices')) {
+      return res.status(500).json({ error: 'Database connection failed', details: err.message });
+    }
+    next();
   }
 });
 
-// URL Normalizer: handles Netlify Function redirects (/api/..., /.netlify/functions/api/..., etc.)
-app.use((req, res, next) => {
-  if (req.url.startsWith('/.netlify/functions/api')) {
-    req.url = req.url.replace('/.netlify/functions/api', '') || '/';
-  }
-  if (req.url.startsWith('/api')) {
-    req.url = req.url.replace('/api', '') || '/';
-  }
-  next();
-});
+// API Router
+const apiRouter = express.Router();
 
-// Health check endpoint
-app.get('/health', (req, res) => {
+apiRouter.get('/health', (req, res) => {
   res.json({
     status: 'ok',
     service: 'Ouvra Billing API',
-    runtime: process.env.NETLIFY ? 'Netlify Functions' : 'Node Express',
-    dbState: process.env.MONGODB_URI ? 'Configured' : 'Missing MONGODB_URI',
+    env: process.env.NODE_ENV || 'production',
+    dbState: process.env.MONGODB_URI ? 'Connected' : 'Missing MONGODB_URI',
     time: new Date().toISOString()
   });
 });
 
-// Mount Routes
-app.use('/auth', authRoutes);
-app.use('/invoices', invoiceRoutes);
+apiRouter.use('/auth', authRoutes);
+apiRouter.use('/invoices', invoiceRoutes);
 
-// Fallback 404 handler for API routes
-app.use((req, res) => {
-  res.status(404).json({ error: 'Route not found', path: req.path, originalUrl: req.originalUrl });
+// Mount API router under both /api and root /
+app.use('/api', apiRouter);
+app.use('/.netlify/functions/api', apiRouter);
+
+// Serve built frontend assets from dist/ (Render Web Service)
+if (fs.existsSync(distPath)) {
+  app.use(express.static(distPath));
+  
+  // Single Page Application (SPA) fallback
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api') || req.path.startsWith('/.netlify')) {
+      return next();
+    }
+    res.sendFile(path.join(distPath, 'index.html'));
+  });
+}
+
+// 404 handler for unknown API calls
+app.use('/api', (req, res) => {
+  res.status(404).json({ error: 'API route not found', path: req.path });
 });
