@@ -1,6 +1,8 @@
 export const elements = {
   // Auth & Account
   authModal: document.getElementById('auth-modal'),
+  closeAuthModal: document.getElementById('close-auth-modal'),
+  authForm: document.getElementById('auth-form'),
   loginTrigger: document.getElementById('login-trigger'),
   modalTitle: document.getElementById('modal-title'),
   authBtn: document.getElementById('auth-btn'),
