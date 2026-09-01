@@ -1,28 +1,33 @@
 import mongoose from 'mongoose';
 
-let cachedConnection = null;
+let cachedPromise = null;
 
 export async function connectDB() {
-  if (cachedConnection && mongoose.connection.readyState === 1) {
-    return cachedConnection;
+  if (mongoose.connection.readyState === 1) {
+    return mongoose.connection;
   }
 
   const uri = process.env.MONGODB_URI;
   if (!uri) {
-    console.warn('[MongoDB] MONGODB_URI is not set.');
+    console.warn('[MongoDB] MONGODB_URI environment variable is missing.');
     return;
   }
 
-  try {
-    const conn = await mongoose.connect(uri, {
-      bufferCommands: false,
-      serverSelectionTimeoutMS: 5000,
-      socketTimeoutMS: 45000
+  if (!cachedPromise) {
+    const opts = {
+      bufferCommands: true,
+      serverSelectionTimeoutMS: 8000,
+      socketTimeoutMS: 45000,
+    };
+    cachedPromise = mongoose.connect(uri, opts).then((mongooseInstance) => {
+      console.log(`[MongoDB] Connected to database: ${mongooseInstance.connection.name}`);
+      return mongooseInstance;
+    }).catch(err => {
+      cachedPromise = null;
+      console.error('[MongoDB] Connection error:', err.message);
+      throw err;
     });
-    cachedConnection = conn;
-    console.log(`[MongoDB] Connected to database: ${conn.connection.name}`);
-    return conn;
-  } catch (err) {
-    console.error('[MongoDB] Connection error:', err.message);
   }
+
+  return await cachedPromise;
 }

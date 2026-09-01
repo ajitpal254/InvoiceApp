@@ -6,6 +6,10 @@
 [build.environment]
   NODE_VERSION = "20"
 
+[functions]
+  node_bundler = "esbuild"
+  included_files = ["server/**"]
+
 # Redirect API calls to Netlify Serverless Function
 [[redirects]]
   from = "/api/*"
@@ -13,7 +17,7 @@
   status = 200
   force = true
 
-# Single Page App routing fallback
+# Single Page App routing fallback for all client routes
 [[redirects]]
   from = "/*"
   to = "/index.html"
