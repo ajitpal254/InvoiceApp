@@ -1,4 +1,4 @@
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+export const API_URL = import.meta.env.VITE_API_URL || (typeof window !== 'undefined' && window.location.port === '5173' ? 'http://localhost:5000/api' : '/api');
 export const STORAGE_KEY = 'nova_invoice_data_v3';
 export const TOKEN_KEY = 'nova_invoice_token';
 

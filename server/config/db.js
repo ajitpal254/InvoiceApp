@@ -1,13 +1,28 @@
 import mongoose from 'mongoose';
 
+let cachedConnection = null;
+
 export async function connectDB() {
-  const uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/invoice_app';
+  if (cachedConnection && mongoose.connection.readyState === 1) {
+    return cachedConnection;
+  }
+
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    console.warn('[MongoDB] MONGODB_URI is not set.');
+    return;
+  }
+
   try {
-    await mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 3000
+    const conn = await mongoose.connect(uri, {
+      bufferCommands: false,
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000
     });
-    console.log(`[MongoDB] Successfully connected to database at: ${uri}`);
+    cachedConnection = conn;
+    console.log(`[MongoDB] Connected to database: ${conn.connection.name}`);
+    return conn;
   } catch (err) {
-    console.warn(`[MongoDB Warning] Could not connect to MongoDB (${err.message}). Running in fallback mode.`);
+    console.error('[MongoDB] Connection error:', err.message);
   }
 }
