@@ -65,12 +65,12 @@ app.use('/.netlify/functions/api', apiRouter);
 if (fs.existsSync(distPath)) {
   app.use(express.static(distPath));
   
-  // Single Page Application (SPA) fallback
-  app.get('*', (req, res, next) => {
-    if (req.path.startsWith('/api') || req.path.startsWith('/.netlify')) {
-      return next();
+  // Single Page Application (SPA) fallback middleware
+  app.use((req, res, next) => {
+    if (req.method === 'GET' && !req.path.startsWith('/api') && !req.path.startsWith('/.netlify')) {
+      return res.sendFile(path.join(distPath, 'index.html'));
     }
-    res.sendFile(path.join(distPath, 'index.html'));
+    next();
   });
 }
 
