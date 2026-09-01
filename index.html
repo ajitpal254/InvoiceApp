@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ouvra Billing | Global Professional Invoicing</title>
+    <title>Ouvra Billing | Professional GST, Export & E-Way Bill Suite</title>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
   </head>
@@ -17,11 +17,11 @@
 
     <!-- Auth Modal -->
     <div id="auth-modal" class="modal-overlay hidden">
-      <div class="glass-card fade-in" style="width: 100%; max-width: 500px; padding: 40px; background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(255, 255, 255, 0.1);">
-        <h2 id="modal-title" style="margin-bottom: 24px; text-align: center;">Ouvra Billing</h2>
+      <div class="glass-card fade-in" style="width: 100%; max-width: 500px; padding: 36px; background: rgba(15, 23, 42, 0.96); border: 1px solid rgba(255, 255, 255, 0.1);">
+        <h2 id="modal-title" style="margin-bottom: 20px; text-align: center;">Ouvra Billing</h2>
         
         <div id="auth-form" class="form-group" style="text-align: left;">
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
              <div class="form-group">
                 <label>Username</label>
                 <input type="text" id="auth-username" class="glass-input" placeholder="Desired username">
@@ -47,7 +47,7 @@
              <textarea id="auth-address" class="glass-input" rows="2" placeholder="Full Address"></textarea>
           </div>
 
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
              <div class="form-group">
                 <label>Password</label>
                 <input type="password" id="auth-password" class="glass-input" placeholder="••••••••">
@@ -58,41 +58,29 @@
              </div>
           </div>
           
-          <button id="auth-btn" class="btn btn-primary" style="width: 100%; margin-top: 16px; margin-bottom: 16px;">Login</button>
-          
-          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px; opacity: 0.4;">
-            <div style="flex: 1; height: 1px; background: white;"></div>
-            <span style="font-size: 11px;">OR</span>
-            <div style="flex: 1; height: 1px; background: white;"></div>
-          </div>
-
-          <button class="btn btn-ghost" style="width: 100%; margin-bottom: 24px; display: flex; align-items: center; justify-content: center; gap: 10px; border: 1px solid var(--border);">
-            <svg style="width: 18px;" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5.04c1.94 0 3.51.64 4.81 1.83l3.59-3.59C18.21 1.48 15.35 0 12 0 7.31 0 3.26 2.69 1.28 6.64l4.13 3.2A7.16 7.16 0 0 1 12 5.04z"/><path fill="#FBBC05" d="M22.72 12.27c0-.82-.07-1.61-.21-2.37H12v4.51h6.01c-.26 1.39-1.04 2.56-2.21 3.35l3.44 2.66c2.02-1.87 3.48-4.63 3.48-8.15z"/><path fill="#4285F4" d="M1.28 6.64c-.18.57-.28 1.17-.28 1.8s.1 1.23.28 1.8l4.13-3.2a7.16 7.16 0 0 1 0-3.6L1.28 6.64z"/><path fill="#34A853" d="M12 24c3.24 0 5.96-1.07 7.95-2.91l-3.44-2.66c-1.1.73-2.51 1.17-4.51 1.17-3.48 0-6.44-2.35-7.49-5.52l-4.13 3.2C3.26 21.31 7.31 24 12 24z"/></svg>
-            Continue with Google
-          </button>
+          <button id="auth-btn" class="btn btn-primary" style="width: 100%; margin-top: 14px; margin-bottom: 14px;">Login</button>
 
           <p id="auth-toggle-text" style="font-size: 13px; color: #94a3b8; text-align: center;">
             Don't have an account? <a href="#" id="auth-toggle" style="color: var(--accent); font-weight: 600;">Sign Up</a>
           </p>
         </div>
-        <p id="auth-error" style="color: #ef4444; font-size: 12px; margin-top: 16px; text-align: center;" class="hidden"></p>
+        <p id="auth-error" style="color: #ef4444; font-size: 12px; margin-top: 14px; text-align: center;" class="hidden"></p>
       </div>
     </div>
 
     <!-- Verification Modal -->
     <div id="verification-modal" class="modal-overlay hidden">
-      <div class="glass-card fade-in" style="width: 100%; max-width: 450px; padding: 40px; background: rgba(15, 23, 42, 0.98); border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
-        <div style="background: rgba(16, 185, 129, 0.1); width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
-          <i data-lucide="mail" style="color: var(--accent); width: 32px; height: 32px;"></i>
+      <div class="glass-card fade-in" style="width: 100%; max-width: 450px; padding: 36px; background: rgba(15, 23, 42, 0.98); border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
+        <div style="background: rgba(16, 185, 129, 0.1); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+          <i data-lucide="mail" style="color: var(--accent); width: 30px; height: 30px;"></i>
         </div>
-        <h2 style="margin-bottom: 12px; font-size: 24px;">Action Restricted</h2>
-        <p style="color: var(--text-muted); line-height: 1.6; margin-bottom: 32px;">
-          To ensure professional integrity and unlock cloud saving/printing, please verify your email address. 
-          Check the link we sent to your inbox!
+        <h2 style="margin-bottom: 10px; font-size: 22px;">Action Restricted</h2>
+        <p style="color: var(--text-muted); line-height: 1.5; margin-bottom: 28px; font-size: 14px;">
+          Please verify your email address to unlock cloud saving and export features. Check the link we sent to your inbox!
         </p>
         <div style="display: flex; gap: 12px;">
-          <button id="close-verify-modal" class="glass-btn secondary" style="flex: 1;">Maybe Later</button>
-          <button id="resend-btn" class="glass-btn primary" style="flex: 1;">Resend Email</button>
+          <button id="close-verify-modal" class="btn btn-secondary" style="flex: 1;">Maybe Later</button>
+          <button id="resend-btn" class="btn btn-primary" style="flex: 1;">Resend Email</button>
         </div>
       </div>
     </div>
@@ -100,235 +88,500 @@
     <div id="app" class="app-container">
       <!-- Editor Sidebar -->
       <aside class="editor-sidebar">
-        <header style="margin-bottom: 32px;">
-          <h1 class="brand" style="color: var(--accent); font-size: 24px; display: flex; align-items: center; gap: 10px;">
-            <img src="/logo.png" alt="Ouvra" style="width: 32px; height: 32px;"> Ouvra Billing
-          </h1>
-          <p style="color: var(--text-muted); font-size: 14px;">Precision Global Billing.</p>
+        <header style="margin-bottom: 24px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h1 class="brand" style="color: var(--accent); font-size: 22px; display: flex; align-items: center; gap: 8px;">
+              <i data-lucide="file-text" style="width: 24px; height: 24px;"></i> Ouvra Billing
+            </h1>
+            <button id="login-trigger" class="btn btn-secondary" style="padding: 6px 14px; font-size: 12px;">
+              Sign In
+            </button>
+          </div>
           
-          <div id="user-info" class="hidden" style="display: flex; align-items: center; gap: 12px; margin-top: 24px; padding: 12px; background: rgba(0,0,0,0.2); border-radius: 8px;">
-            <div style="background: var(--accent); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white;" id="user-initial">A</div>
+          <div id="user-info" class="hidden" style="display: flex; align-items: center; gap: 10px; margin-top: 14px; padding: 10px; background: rgba(0,0,0,0.25); border-radius: 8px;">
+            <div style="background: var(--accent); width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 12px;" id="user-initial">A</div>
             <div style="flex: 1; min-width: 0;">
-              <p id="user-display-name" style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: white;">Username</p>
+              <p id="user-display-name" style="font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: white;">User</p>
               <a href="#" id="logout-btn" style="font-size: 11px; color: #94a3b8;">Logout</a>
             </div>
           </div>
-          <button id="login-trigger" class="btn btn-primary" style="width: 100%; margin-top: 24px;">
-             Sign In / Register
-          </button>
         </header>
 
+        <!-- Document Type Selector Pills -->
+        <div class="doc-type-nav-card glass-card" style="padding: 14px; margin-bottom: 20px;">
+          <label style="font-size: 11px; margin-bottom: 8px; color: var(--accent); font-weight: 700;">Document Format</label>
+          <div class="doc-type-pills-grid">
+            <button class="doc-type-pill active" data-doctype="gst_invoice">
+              <i data-lucide="receipt" style="width: 14px;"></i> GST Tax / Export
+            </button>
+            <button class="doc-type-pill" data-doctype="eway_bill">
+              <i data-lucide="truck" style="width: 14px;"></i> e-Way Bill
+            </button>
+            <button class="doc-type-pill" data-doctype="proforma_invoice">
+              <i data-lucide="clipboard-list" style="width: 14px;"></i> Proforma
+            </button>
+            <button class="doc-type-pill" data-doctype="commercial_invoice">
+              <i data-lucide="ship" style="width: 14px;"></i> Customs Export
+            </button>
+            <button class="doc-type-pill" data-doctype="standard_invoice">
+              <i data-lucide="file" style="width: 14px;"></i> Standard
+            </button>
+          </div>
+
+          <!-- Quick Presets Load Bar -->
+          <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border);">
+            <label style="font-size: 10px; color: var(--text-muted); margin-bottom: 6px;">⚡ Quick Load Presets</label>
+            <select id="preset-select" class="glass-input" style="font-size: 12px; padding: 8px;">
+              <option value="" disabled selected>-- Select a Preset to load sample --</option>
+              <option value="gst_invoice">🇮🇳 GST Export Invoice Sample</option>
+              <option value="eway_bill">🚚 e-Way Bill Sample</option>
+              <option value="proforma_invoice">📑 Proforma Invoice Sample</option>
+              <option value="commercial_invoice">🚢 Customs Commercial Export Sample</option>
+              <option value="standard_invoice">📄 Standard Consulting Invoice Sample</option>
+            </select>
+          </div>
+        </div>
+
         <section class="editor-section">
-          <div class="glass-card" style="margin-bottom: 24px; padding: 16px;">
-            <label style="font-size: 11px; margin-bottom: 12px; display: block;">Preferences</label>
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
-              <div class="form-group" style="margin-bottom: 0;">
-                <label style="font-size: 10px;">Accent Color</label>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                  <input type="color" id="theme-color" value="#10b981" style="padding: 2px; height: 32px; width: 40px; cursor: pointer;" />
-                  <span id="color-value" style="font-size: 11px; font-family: monospace;">#10B981</span>
-                </div>
-              </div>
+          <!-- Common Preferences -->
+          <div class="glass-card form-section" style="margin-bottom: 16px; padding: 14px;">
+            <label style="font-size: 11px; margin-bottom: 10px; display: block; font-weight: 700;">General Setup</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
               <div class="form-group" style="margin-bottom: 0;">
                 <label style="font-size: 10px;">Currency</label>
                 <select id="currency-select" class="glass-input" style="padding: 6px; font-size: 12px;">
-                  <option value="CAD" selected>CAD ($)</option>
+                  <option value="INR" selected>INR (₹)</option>
                   <option value="USD">USD ($)</option>
+                  <option value="CAD">CAD ($)</option>
                   <option value="EUR">EUR (€)</option>
                   <option value="GBP">GBP (£)</option>
-                  <option value="INR">INR (₹)</option>
-                  <option value="JPY">JPY (¥)</option>
-                  <option value="BDT">BDT (৳)</option>
+                  <option value="SAR">SAR (﷼)</option>
+                  <option value="AED">AED (د.إ)</option>
                   <option value="LKR">LKR (₨)</option>
-                  <option value="MYR">MYR (RM)</option>
                 </select>
               </div>
               <div class="form-group" style="margin-bottom: 0;">
-                <label style="font-size: 10px;">Unit Type</label>
-                <select id="unit-type" class="glass-input" style="padding: 6px; font-size: 12px;">
-                  <option value="Qty" selected>Qty</option>
-                  <option value="Hrs">Hrs</option>
+                <label style="font-size: 10px;">Accent Color</label>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                  <input type="color" id="theme-color" value="#10b981" style="padding: 2px; height: 32px; width: 38px; cursor: pointer;" />
+                  <span id="color-value" style="font-size: 11px; font-family: monospace;">#10B981</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 1: Exporter / Supplier / Company Details -->
+          <div class="glass-card form-section" style="margin-bottom: 16px; padding: 14px;">
+            <label style="font-size: 11px; margin-bottom: 10px; display: block; font-weight: 700;">Seller / Exporter Details</label>
+            <div class="form-group">
+              <label style="font-size: 10px;">Company / Firm Name</label>
+              <input type="text" id="company-name" class="glass-input" placeholder="Company / Business Name">
+            </div>
+            <div class="form-group doc-section" data-doctype="gst_invoice,commercial_invoice,proforma_invoice">
+              <label style="font-size: 10px;">Deals In / Subtitle</label>
+              <input type="text" id="deals-in" class="glass-input" placeholder="Products / Deals In">
+            </div>
+            <div class="form-group">
+              <label style="font-size: 10px;">Address</label>
+              <textarea id="sender-info" rows="2" class="glass-input" placeholder="Address, City, State, Country"></textarea>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div class="form-group">
+                <label style="font-size: 10px;">Phone</label>
+                <input type="text" id="sender-phone" class="glass-input" placeholder="Phone Number">
+              </div>
+              <div class="form-group">
+                <label style="font-size: 10px;">Email</label>
+                <input type="text" id="sender-email" class="glass-input" placeholder="email@example.com">
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div class="form-group">
+                <label style="font-size: 10px;">GSTIN</label>
+                <input type="text" id="sender-gstin" class="glass-input" placeholder="GSTIN (e.g. 03AAAAA0000A1Z5)">
+              </div>
+              <div class="form-group">
+                <label style="font-size: 10px;">PAN NO</label>
+                <input type="text" id="sender-pan" class="glass-input" placeholder="PAN (e.g. AAAAA0000A)">
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;" class="doc-section" data-doctype="gst_invoice,eway_bill">
+              <div class="form-group">
+                <label style="font-size: 10px;">State Name</label>
+                <input type="text" id="sender-state" class="glass-input" placeholder="State Name">
+              </div>
+              <div class="form-group">
+                <label style="font-size: 10px;">State Code</label>
+                <input type="text" id="sender-state-code" class="glass-input" placeholder="State Code (e.g. 03)">
+              </div>
+            </div>
+            <div class="form-group doc-section" data-doctype="commercial_invoice,proforma_invoice">
+              <label style="font-size: 10px;">IEC NO (Import Export Code)</label>
+              <input type="text" id="iec-no" class="glass-input" placeholder="IEC Number">
+            </div>
+          </div>
+
+          <!-- Section 2: Invoice Numbers & Dates -->
+          <div class="glass-card form-section" style="margin-bottom: 16px; padding: 14px;">
+            <label style="font-size: 11px; margin-bottom: 10px; display: block; font-weight: 700;">Document Info & Headers</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div class="form-group">
+                <label style="font-size: 10px;">Invoice / Doc #</label>
+                <input type="text" id="invoice-number" class="glass-input" placeholder="Invoice #">
+              </div>
+              <div class="form-group">
+                <label style="font-size: 10px;">Date</label>
+                <input type="date" id="invoice-date" class="glass-input">
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;" class="doc-section" data-doctype="gst_invoice">
+              <div class="form-group">
+                <label style="font-size: 10px;">Bill Header Title</label>
+                <input type="text" id="bill-title" class="glass-input" placeholder="TAX INVOICE / EXPORT INVOICE">
+              </div>
+              <div class="form-group">
+                <label style="font-size: 10px;">Subtype</label>
+                <input type="text" id="bill-subtype" class="glass-input" placeholder="CREDIT BILL">
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;" class="doc-section" data-doctype="gst_invoice,commercial_invoice">
+              <div class="form-group">
+                <label style="font-size: 10px;">Order No / Buyer Order</label>
+                <input type="text" id="order-no" class="glass-input" placeholder="Order No">
+              </div>
+              <div class="form-group">
+                <label style="font-size: 10px;">Order Date</label>
+                <input type="text" id="order-date" class="glass-input" placeholder="DD/MM/YYYY">
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 3: Buyer / Receiver / Consignee -->
+          <div class="glass-card form-section" style="margin-bottom: 16px; padding: 14px;">
+            <label style="font-size: 11px; margin-bottom: 10px; display: block; font-weight: 700;">Billed To (Receiver)</label>
+            <div class="form-group">
+              <label style="font-size: 10px;">Buyer / Receiver Name</label>
+              <input type="text" id="recipient-name" class="glass-input" placeholder="Buyer / Client Name">
+            </div>
+            <div class="form-group">
+              <label style="font-size: 10px;">Buyer Address & City</label>
+              <textarea id="recipient-info" rows="2" class="glass-input" placeholder="Address, City, Country..."></textarea>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;" class="doc-section" data-doctype="gst_invoice,eway_bill">
+              <div class="form-group">
+                <label style="font-size: 10px;">Buyer GSTIN</label>
+                <input type="text" id="recipient-gstin" class="glass-input" placeholder="GSTIN / URP">
+              </div>
+              <div class="form-group">
+                <label style="font-size: 10px;">Buyer PAN</label>
+                <input type="text" id="recipient-pan" class="glass-input" placeholder="PAN Number">
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;" class="doc-section" data-doctype="gst_invoice">
+              <div class="form-group">
+                <label style="font-size: 10px;">Buyer State</label>
+                <input type="text" id="recipient-state" class="glass-input" placeholder="State Name">
+              </div>
+              <div class="form-group">
+                <label style="font-size: 10px;">Buyer State Code</label>
+                <input type="text" id="recipient-state-code" class="glass-input" placeholder="State Code">
+              </div>
+            </div>
+
+            <!-- Optional Consignee (if different) -->
+            <div class="doc-section" data-doctype="gst_invoice,commercial_invoice,proforma_invoice" style="margin-top: 10px; border-top: 1px dashed var(--border); padding-top: 10px;">
+              <label style="font-size: 10px; color: var(--accent);">Consignee (Supplied To - if different)</label>
+              <div class="form-group" style="margin-top: 6px;">
+                <input type="text" id="consignee-name" class="glass-input" placeholder="Consignee Name">
+              </div>
+              <div class="form-group">
+                <textarea id="consignee-info" rows="2" class="glass-input" placeholder="Consignee Address (leave empty if same as billed to)"></textarea>
+              </div>
+              <div class="form-group doc-section" data-doctype="gst_invoice">
+                <label style="font-size: 10px;">Consignee State Code</label>
+                <input type="text" id="consignee-state-code" class="glass-input" placeholder="State Code">
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 4: GST Transport & Supply Specifics -->
+          <div class="glass-card form-section doc-section" data-doctype="gst_invoice" style="margin-bottom: 16px; padding: 14px;">
+            <label style="font-size: 11px; margin-bottom: 10px; display: block; font-weight: 700;">Transport & Shipping (GST)</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div class="form-group">
+                <label style="font-size: 10px;">Place of Supply</label>
+                <input type="text" id="place-of-supply" class="glass-input" placeholder="Place of Supply">
+              </div>
+              <div class="form-group">
+                <label style="font-size: 10px;">Place of Delivery</label>
+                <input type="text" id="place-of-delivery" class="glass-input" placeholder="Place of Delivery">
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div class="form-group">
+                <label style="font-size: 10px;">Transporter Name</label>
+                <input type="text" id="transporter-name" class="glass-input" placeholder="Transporter Name">
+              </div>
+              <div class="form-group">
+                <label style="font-size: 10px;">Transporter ID (TPT)</label>
+                <input type="text" id="transporter-id" class="glass-input" placeholder="Transporter GSTIN / ID">
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div class="form-group">
+                <label style="font-size: 10px;">Vehicle No</label>
+                <input type="text" id="vehicle-no" class="glass-input" placeholder="Vehicle Number">
+              </div>
+              <div class="form-group">
+                <label style="font-size: 10px;">GR No & Date</label>
+                <div style="display: flex; gap: 6px;">
+                  <input type="text" id="gr-no" class="glass-input" placeholder="GR No" style="flex: 1;">
+                  <input type="text" id="gr-date" class="glass-input" placeholder="Date" style="flex: 1;">
+                </div>
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div class="form-group">
+                <label style="font-size: 10px;">E-Way Bill No.</label>
+                <input type="text" id="eway-no" class="glass-input" placeholder="E-Way Bill #">
+              </div>
+              <div class="form-group">
+                <label style="font-size: 10px;">Reverse Charge (Y/N)</label>
+                <select id="reverse-charge" class="glass-input">
+                  <option value="N" selected>N (No)</option>
+                  <option value="Y">Y (Yes)</option>
                 </select>
               </div>
             </div>
-          </div>
-
-          <div class="form-group">
-            <label>From (Your Business)</label>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 8px;">
-               <select id="sender-country" class="glass-input" style="font-size: 12px;">
-                 <option value="India" selected>India</option>
-                 <option value="Canada">Canada</option>
-                 <option value="USA">USA</option>
-                 <option value="UK">UK</option>
-                 <option value="Europe">Europe</option>
-                 <option value="Bangladesh">Bangladesh</option>
-                 <option value="Sri Lanka">Sri Lanka</option>
-                 <option value="Malaysia">Malaysia</option>
-               </select>
-               <input type="text" id="sender-taxid" class="glass-input" placeholder="Your GST #" style="font-size: 12px;">
-            </div>
-            <textarea id="sender-info" rows="3" placeholder="Company Name&#10;Address"></textarea>
-          </div>
-
-          <div class="form-group">
-            <label>Bill To (Recipient)</label>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 8px;">
-               <select id="country-select" class="glass-input" style="font-size: 12px;">
-                 <option value="Canada" selected>Canada</option>
-                 <option value="India">India</option>
-                 <option value="USA">USA</option>
-                 <option value="UK">UK</option>
-                 <option value="Europe">Europe</option>
-                 <option value="Bangladesh">Bangladesh</option>
-                 <option value="Sri Lanka">Sri Lanka</option>
-                 <option value="Malaysia">Malaysia</option>
-               </select>
-               <select id="province-select" class="glass-input" style="font-size: 12px;">
-                 <!-- Dynamic -->
-               </select>
-            </div>
-            <textarea id="recipient-info" rows="3" placeholder="Client Name&#10;Address"></textarea>
-          </div>
-
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-            <div class="form-group">
-              <label>Invoice #</label>
-              <input type="text" id="invoice-number" />
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div class="form-group">
+                <label style="font-size: 10px;">Shipping Bill Type</label>
+                <select id="shipping-bill-type" class="glass-input">
+                  <option value="W PAY" selected>W PAY (With Payment)</option>
+                  <option value="WO PAY">WO PAY (Under LUT)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label style="font-size: 10px;">Shipping Bill # & Date</label>
+                <input type="text" id="shipping-bill-no" class="glass-input" placeholder="Bill No">
+              </div>
             </div>
             <div class="form-group">
-              <label>Date</label>
-              <input type="date" id="invoice-date" />
+              <label style="font-size: 10px;">Remarks / Container No</label>
+              <input type="text" id="remarks" class="glass-input" placeholder="Remarks or Container #">
             </div>
           </div>
 
-          <div class="form-group">
-             <label style="display: flex; justify-content: space-between; align-items: center;">
-              Items 
-              <button id="add-item-btn" class="btn btn-ghost" style="padding: 4px 8px; font-size: 12px;">+ Add Item</button>
-            </label>
+          <!-- Section 5: e-Way Bill Specific Details -->
+          <div class="glass-card form-section doc-section" data-doctype="eway_bill" style="margin-bottom: 16px; padding: 14px;">
+            <label style="font-size: 11px; margin-bottom: 10px; display: block; font-weight: 700;">e-Way Bill Details</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div class="form-group">
+                <label style="font-size: 10px;">E-Way Bill No</label>
+                <input type="text" id="eway-bill-no" class="glass-input" placeholder="E-Way Bill Number">
+              </div>
+              <div class="form-group">
+                <label style="font-size: 10px;">Distance (Kms)</label>
+                <input type="text" id="distance-km" class="glass-input" placeholder="Distance in Kms">
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div class="form-group">
+                <label style="font-size: 10px;">Valid From</label>
+                <input type="text" id="valid-from" class="glass-input" placeholder="DD/MM/YYYY HH:MM AM/PM">
+              </div>
+              <div class="form-group">
+                <label style="font-size: 10px;">Valid Until</label>
+                <input type="text" id="valid-until" class="glass-input" placeholder="DD/MM/YYYY HH:MM AM/PM">
+              </div>
+            </div>
+            <div class="form-group">
+              <label style="font-size: 10px;">Place of Dispatch</label>
+              <input type="text" id="place-of-dispatch" class="glass-input" placeholder="Dispatch Place & Pincode">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div class="form-group">
+                <label style="font-size: 10px;">Transaction Type</label>
+                <input type="text" id="transaction-type" class="glass-input" placeholder="Regular">
+              </div>
+              <div class="form-group">
+                <label style="font-size: 10px;">Reason for Transportation</label>
+                <input type="text" id="reason-for-transport" class="glass-input" placeholder="Outward - Supply">
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+              <div class="form-group">
+                <label style="font-size: 10px;">Mode</label>
+                <select id="transport-mode" class="glass-input">
+                  <option value="Road" selected>Road</option>
+                  <option value="Rail">Rail</option>
+                  <option value="Air">Air</option>
+                  <option value="Ship">Ship</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label style="font-size: 10px;">Doc No</label>
+                <input type="text" id="trans-doc-no" class="glass-input" placeholder="Doc #">
+              </div>
+              <div class="form-group">
+                <label style="font-size: 10px;">From Place</label>
+                <input type="text" id="from-location" class="glass-input" placeholder="From City">
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 6: Customs Commercial & Proforma Shipping Details -->
+          <div class="glass-card form-section doc-section" data-doctype="commercial_invoice,proforma_invoice" style="margin-bottom: 16px; padding: 14px;">
+            <label style="font-size: 11px; margin-bottom: 10px; display: block; font-weight: 700;">International Trade & Logistics</label>
+            <div class="form-group doc-section" data-doctype="commercial_invoice">
+              <label style="font-size: 10px;">Export Tax Declaration Header</label>
+              <input type="text" id="export-header-note" class="glass-input" placeholder="SUPPLY MEANT FOR EXPORT ON PAYMENT OF IGST">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div class="form-group">
+                <label style="font-size: 10px;">Country of Origin</label>
+                <input type="text" id="country-of-origin" class="glass-input" placeholder="Country of Origin (e.g. INDIAN)">
+              </div>
+              <div class="form-group">
+                <label style="font-size: 10px;">Country of Destination</label>
+                <input type="text" id="country-of-destination" class="glass-input" placeholder="Destination Country / Port">
+              </div>
+            </div>
+            <div class="form-group">
+              <label style="font-size: 10px;">Terms of Delivery & Payment</label>
+              <input type="text" id="terms-of-delivery" class="glass-input" placeholder="e.g. CIF, DP AT SIGHT">
+            </div>
+            <div class="form-group doc-section" data-doctype="proforma_invoice">
+              <label style="font-size: 10px;">Delivery Date / Timeframe</label>
+              <input type="text" id="delivery-terms" class="glass-input" placeholder="e.g. 45 TO 60 DAYS">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;" class="doc-section" data-doctype="commercial_invoice">
+              <div class="form-group">
+                <label style="font-size: 10px;">Pre-Carriage By</label>
+                <input type="text" id="pre-carriage-by" class="glass-input" placeholder="e.g. BY ROAD/RAIL">
+              </div>
+              <div class="form-group">
+                <label style="font-size: 10px;">Place of Receipt</label>
+                <input type="text" id="place-of-receipt" class="glass-input" placeholder="Place of Receipt">
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;" class="doc-section" data-doctype="commercial_invoice">
+              <div class="form-group">
+                <label style="font-size: 10px;">Port of Loading</label>
+                <input type="text" id="port-of-loading" class="glass-input" placeholder="Port of Loading">
+              </div>
+              <div class="form-group">
+                <label style="font-size: 10px;">Port of Discharge</label>
+                <input type="text" id="port-of-discharge" class="glass-input" placeholder="Port of Discharge">
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;" class="doc-section" data-doctype="commercial_invoice">
+              <div class="form-group">
+                <label style="font-size: 10px;">Marks & Numbers</label>
+                <input type="text" id="marks-and-nos" class="glass-input" placeholder="Marks & Numbers">
+              </div>
+              <div class="form-group">
+                <label style="font-size: 10px;">Packages Description</label>
+                <input type="text" id="packages-desc" class="glass-input" placeholder="Packages Description">
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;" class="doc-section" data-doctype="commercial_invoice">
+              <div class="form-group">
+                <label style="font-size: 10px;">Total Pkgs</label>
+                <input type="text" id="total-packages" class="glass-input" placeholder="Total Packages (e.g. 100 PKGS)">
+              </div>
+              <div class="form-group">
+                <label style="font-size: 10px;">Total Grs. Wt.</label>
+                <input type="text" id="total-gross-weight" class="glass-input" placeholder="Gross Weight">
+              </div>
+              <div class="form-group">
+                <label style="font-size: 10px;">Total Net Wt.</label>
+                <input type="text" id="total-net-weight" class="glass-input" placeholder="Net Weight">
+              </div>
+            </div>
+            <div class="form-group doc-section" data-doctype="commercial_invoice">
+              <label style="font-size: 10px;">Legal Declaration</label>
+              <textarea id="declaration" rows="2" class="glass-input" placeholder="1. We declare that this invoice shows..."></textarea>
+            </div>
+          </div>
+
+          <!-- Section 7: Items Table Editor -->
+          <div class="glass-card form-section" style="margin-bottom: 16px; padding: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <label style="font-size: 11px; font-weight: 700; margin-bottom: 0;">Items & Products</label>
+              <button id="add-item-btn" class="btn btn-primary" style="padding: 4px 10px; font-size: 11px;">
+                <i data-lucide="plus" style="width: 13px;"></i> Add Item
+              </button>
+            </div>
             <div id="items-editor-list"></div>
           </div>
 
-          <div class="form-group">
-            <label>Discount</label>
-            <div style="display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 8px;">
-               <input type="text" id="discount-desc" class="glass-input" placeholder="Discount Description (e.g., Holiday Sale)" style="font-size: 12px;">
+          <!-- Section 8: Bank Details & Terms -->
+          <div class="glass-card form-section doc-section" data-doctype="gst_invoice,standard_invoice,commercial_invoice,proforma_invoice" style="margin-bottom: 16px; padding: 14px;">
+            <label style="font-size: 11px; margin-bottom: 10px; display: block; font-weight: 700;">Banking & Signatures</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;" class="doc-section" data-doctype="gst_invoice,standard_invoice">
+              <div class="form-group">
+                <label style="font-size: 10px;">Bank Name</label>
+                <input type="text" id="bank-name" class="glass-input" placeholder="INDUSIND BANK">
+              </div>
+              <div class="form-group">
+                <label style="font-size: 10px;">Account Number</label>
+                <input type="text" id="bank-account-no" class="glass-input" placeholder="201000198005">
+              </div>
             </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-               <select id="discount-type" class="glass-input" style="font-size: 12px;">
-                 <option value="amount" selected>Fixed Amount</option>
-                 <option value="percent">Percentage (%)</option>
-               </select>
-               <input type="number" id="discount-value" class="glass-input" placeholder="Value" style="font-size: 12px;" min="0">
+            <div class="form-group doc-section" data-doctype="gst_invoice,standard_invoice">
+              <label style="font-size: 10px;">IFSC Code</label>
+              <input type="text" id="bank-ifsc" class="glass-input" placeholder="INDB0000020">
+            </div>
+            <div class="form-group doc-section" data-doctype="gst_invoice">
+              <label style="font-size: 10px;">Terms & Conditions</label>
+              <textarea id="terms-and-conditions" rows="3" class="glass-input" placeholder="1. Interest @24%...&#10;2. Subject to Ludhiana Jurisdiction..."></textarea>
+            </div>
+            <div class="form-group">
+              <label style="font-size: 10px;">Signatory Stamp / Designation</label>
+              <input type="text" id="signatory-title" class="glass-input" placeholder="Authorised Signatory / PROP.">
+            </div>
+            <div class="form-group doc-section" data-doctype="standard_invoice">
+              <label style="font-size: 10px;">Notes / Custom Message</label>
+              <textarea id="invoice-notes" rows="2" class="glass-input" placeholder="Notes..."></textarea>
+            </div>
+            <div class="form-group doc-section" data-doctype="standard_invoice">
+              <label style="font-size: 10px;">Payment Instructions</label>
+              <textarea id="payment-info" rows="2" class="glass-input" placeholder="Payment info..."></textarea>
             </div>
           </div>
 
-          <div class="form-group">
-            <label>Notes / Terms</label>
-            <textarea id="invoice-notes" rows="2"></textarea>
-          </div>
-
-          <div class="form-group">
-            <label>Payment Info</label>
-            <textarea id="payment-info" rows="2"></textarea>
-          </div>
-
-          <div id="history-section" class="hidden" style="margin-top: 32px;">
-            <label style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.6;">My History</label>
-            <div id="history-list"></div>
+          <!-- History Section -->
+          <div id="history-section" class="hidden" style="margin-top: 24px;">
+            <label style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7;">My Saved Invoices</label>
+            <div id="history-list" style="margin-top: 10px;"></div>
           </div>
         </section>
 
-        <footer style="margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border);">
-          <button id="export-btn" class="btn btn-primary" style="width: 100%;">Print / PDF</button>
-          <button id="reset-btn" class="btn btn-ghost" style="width: 100%; margin-top: 12px;">Reset</button>
+        <!-- Sidebar Footer Action Buttons -->
+        <footer style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border); position: sticky; bottom: 0; background: var(--bg-secondary); z-index: 10;">
+          <button id="export-btn" class="btn btn-primary" style="width: 100%; font-size: 15px; padding: 12px;">
+            <i data-lucide="printer" style="width: 18px;"></i> Print / Download PDF
+          </button>
+          <button id="reset-btn" class="btn btn-ghost" style="width: 100%; margin-top: 8px; font-size: 13px;">
+            <i data-lucide="refresh-cw" style="width: 14px;"></i> Reset All Fields
+          </button>
         </footer>
       </aside>
 
-      <!-- Preview -->
+      <!-- Document Preview Canvas Area -->
       <main class="preview-area">
         <div id="invoice-canvas" class="invoice-canvas">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 60px;">
-            <div>
-               <h3 id="display-company-name" style="font-size: 24px; font-weight: 700; color: #1e293b; margin-bottom: 4px;">Company Name</h3>
-               <p id="display-sender-taxid" style="font-size: 12px; color: #64748b; font-weight: 600;">GST/TAX: -</p>
-            </div>
-            <div style="text-align: right;">
-              <h2 style="font-size: 40px; font-weight: 800; color: #10b981;">INVOICE</h2>
-              <p style="color: #64748b; font-weight: 600;"># <span id="display-invoice-number"></span></p>
-            </div>
-          </div>
-
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px;">
-            <div>
-              <p style="color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px;">From</p>
-              <div id="display-sender-info" style="font-size: 14px; white-space: pre-line;"></div>
-            </div>
-            <div>
-              <p style="color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px;">Bill To</p>
-              <div id="display-recipient-info" style="font-size: 14px; white-space: pre-line;"></div>
-            </div>
-          </div>
-
-          <div style="margin-bottom: 40px; border-bottom: 1px solid #f1f5f9; padding-bottom: 20px;">
-             <p style="color: #64748b; font-size: 11px; font-weight: 700;">Issue Date: <span id="display-invoice-date" style="color: #1e293b; margin-left: 8px;"></span></p>
-          </div>
-
-          <table class="items-table">
-            <thead>
-              <tr>
-                <th>Description</th>
-                <th id="display-unit-header" style="text-align: center;">Qty</th>
-                <th style="text-align: right;">Price</th>
-                <th style="text-align: right;">Total</th>
-              </tr>
-            </thead>
-            <tbody id="display-items-list"></tbody>
-          </table>
-
-          <div style="display: flex; justify-content: flex-end; margin-top: 40px;">
-            <div style="min-width: 250px; white-space: nowrap;">
-              <div style="display: flex; justify-content: space-between; padding: 4px 0; gap: 32px;">
-                <span style="color: #64748b;">Subtotal</span>
-                <span id="display-subtotal"></span>
-              </div>
-              <div id="display-discount-row" style="display: none; justify-content: space-between; padding: 4px 0; color: #10b981; gap: 32px;">
-                <span id="display-discount-desc">Discount</span>
-                <span id="display-discount-amount"></span>
-              </div>
-              <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #f1f5f9; gap: 32px;">
-                <span id="display-tax-rate" style="color: #64748b;">Tax</span>
-                <span id="display-tax-amount"></span>
-              </div>
-              <div style="display: flex; justify-content: space-between; padding: 16px 0; gap: 32px;">
-                <span style="font-weight: 700;">Total</span>
-                <span id="display-grand-total" style="font-size: 20px; font-weight: 800; color: #10b981;"></span>
-              </div>
-            </div>
-          </div>
-
-          <div id="export-note-container" style="margin-top: 20px; padding: 12px; border: 1px dashed #e2e8f0; border-radius: 8px; font-size: 12px; color: #64748b; font-style: italic; display: none;">
-             <i data-lucide="info" style="width: 14px; vertical-align: middle; margin-right: 6px;"></i>
-             <span id="export-note">Zero Rated Export under LUT</span>
-          </div>
-
-          <div style="margin-top: 60px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; border-top: 1px solid #f1f5f9; padding-top: 30px;">
-            <div>
-              <p style="color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase;">Notes</p>
-              <p id="display-notes" style="font-size: 13px;"></p>
-            </div>
-            <div>
-              <p style="color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase;">Payment</p>
-              <p id="display-payment" style="font-size: 13px;"></p>
-            </div>
-          </div>
+          <!-- Dynamically populated by render.js -->
         </div>
       </main>
     </div>
+
     <script type="module" src="/src/main.js"></script>
     <script>
-      document.addEventListener('DOMContentLoaded', () => { lucide.createIcons(); });
+      document.addEventListener('DOMContentLoaded', () => { 
+        if (window.lucide) window.lucide.createIcons(); 
+      });
     </script>
   </body>
 </html>
