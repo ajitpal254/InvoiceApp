@@ -1,1 +1,0 @@
-# Do not ignore server/ as Netlify Functions depend on server/app.js and its submodules
