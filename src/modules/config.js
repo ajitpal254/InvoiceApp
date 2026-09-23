@@ -1,9 +1,6 @@
 export const API_URL = import.meta.env.VITE_API_URL || (typeof window !== 'undefined' && window.location.port === '5173' ? 'http://localhost:5000/api' : '/api');
 export const STORAGE_KEY = 'nova_invoice_data_v3';
 export const TOKEN_KEY = 'nova_invoice_token';
-export const LAST_ACTIVE_KEY = 'nova_last_active';
-/** 30-day inactivity expiry in milliseconds */
-export const TOKEN_EXPIRY_MS = 30 * 24 * 60 * 60 * 1000;
 
 export const CURRENCY_SYMBOLS = {
   'INR': '₹',

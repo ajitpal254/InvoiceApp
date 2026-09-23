@@ -7,7 +7,7 @@ import fs from 'fs';
 import mongoose from 'mongoose';
 import { fileURLToPath } from 'url';
 import { sanitizeMongoInput } from './middleware/mongoSanitize.js';
-import { connectDB } from './config/db.js';
+import rateLimit from 'express-rate-limit';
 import authRoutes from './routes/auth.js';
 import invoiceRoutes from './routes/invoices.js';
 
@@ -57,29 +57,22 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Sanitize MongoDB operators against NoSQL injection
 app.use(sanitizeMongoInput);
 
-// Database connection middleware with error logging
-app.use(async (req, res, next) => {
-  try {
-    await connectDB();
-    next();
-  } catch (err) {
-    console.error('[DB Middleware Error]:', err);
-    if (req.path.startsWith('/api') || req.path.startsWith('/auth') || req.path.startsWith('/invoices')) {
-      return res.status(500).json({ error: 'Database connection failed' });
-    }
-    next();
-  }
-});
-
 // API Router
 const apiRouter = express.Router();
+
+// Rate limiter for authentication routes
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20,
+  message: { error: 'Too many requests, please try again later.' }
+});
 
 // Health check that actively verifies MongoDB connectivity
 apiRouter.get('/health', async (req, res) => {
   const isDbConnected = mongoose.connection.readyState === 1;
   const healthData = {
     status: isDbConnected ? 'ok' : 'degraded',
-    service: 'Ouvra Billing API',
+    service: 'nova-invoice API',
     env: process.env.NODE_ENV || 'development',
     database: {
       connected: isDbConnected,
@@ -95,7 +88,7 @@ apiRouter.get('/health', async (req, res) => {
   return res.status(200).json(healthData);
 });
 
-apiRouter.use('/auth', authRoutes);
+apiRouter.use('/auth', authLimiter, authRoutes);
 apiRouter.use('/invoices', invoiceRoutes);
 
 // Mount API router under both /api and root /

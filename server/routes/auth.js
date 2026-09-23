@@ -1,40 +1,29 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import rateLimit from 'express-rate-limit';
 import { User } from '../models/User.js';
 import { authMiddleware, getJwtSecret } from '../middleware/auth.js';
-import { validate } from '../middleware/validate.js';
-import { registerSchema, loginSchema } from '../validation/schemas.js';
 
 const router = express.Router();
 
-// Strict rate limiter for authentication endpoints to protect against brute-force attacks
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 30, // Limit each IP to 30 requests per window
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { message: 'Too many authentication attempts, please try again later.' }
-});
-
 // Register
-router.post('/register', authLimiter, validate(registerSchema), async (req, res, next) => {
+router.post('/register', async (req, res) => {
   try {
     const { username, email, password, fullName, companyName, address, taxId, country } = req.body;
 
-    const existingUser = await User.findOne({
-      $or: [{ username: username.toLowerCase() }, { email: email.toLowerCase() }]
-    });
+    if (!username || !email || !password) {
+      return res.status(400).json({ message: 'Username, email, and password are required' });
+    }
 
+    const existingUser = await User.findOne({ $or: [{ username }, { email }] });
     if (existingUser) {
       return res.status(400).json({ message: 'Username or Email is already registered' });
     }
 
-    const passwordHash = await bcrypt.hash(password, 12);
+    const passwordHash = await bcrypt.hash(password, 10);
     const user = new User({
-      username: username.toLowerCase(),
-      email: email.toLowerCase(),
+      username,
+      email,
       passwordHash,
       fullName: fullName || '',
       companyName: companyName || '',
@@ -47,18 +36,21 @@ router.post('/register', authLimiter, validate(registerSchema), async (req, res,
     await user.save();
     return res.status(201).json({ message: 'User registered successfully', username: user.username });
   } catch (err) {
-    next(err);
+    console.error('Registration error:', err);
+    return res.status(500).json({ message: 'Registration failed. Please try again.' });
   }
 });
 
 // Login
-router.post('/login', authLimiter, validate(loginSchema), async (req, res, next) => {
+router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
-    const cleanUsername = username.trim().toLowerCase();
+    if (!username || !password) {
+      return res.status(400).json({ message: 'Username and password are required' });
+    }
 
-    const user = await User.findOne({ 
-      $or: [{ username: cleanUsername }, { email: cleanUsername }] 
+    const user = await User.findOne({
+      $or: [{ username: username.trim() }, { email: username.trim().toLowerCase() }]
     });
 
     if (!user) {
@@ -71,7 +63,7 @@ router.post('/login', authLimiter, validate(loginSchema), async (req, res, next)
     }
 
     const token = jwt.sign(
-      { id: user._id.toString(), username: user.username, email: user.email },
+      { id: user._id, username: user.username, email: user.email },
       getJwtSecret(),
       { algorithm: 'HS256', expiresIn: '7d' }
     );
@@ -83,23 +75,24 @@ router.post('/login', authLimiter, validate(loginSchema), async (req, res, next)
       isVerified: user.isVerified
     });
   } catch (err) {
-    next(err);
+    console.error('Login error:', err);
+    return res.status(500).json({ message: 'Login failed' });
   }
 });
 
 // Profile
-router.get('/profile', authMiddleware, async (req, res, next) => {
+router.get('/profile', authMiddleware, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-passwordHash');
     if (!user) return res.status(404).json({ message: 'User not found' });
     return res.json(user);
   } catch (err) {
-    next(err);
+    return res.status(500).json({ message: 'Failed to fetch user profile' });
   }
 });
 
 // Verification handler
-router.get('/verify', async (req, res, next) => {
+router.get('/verify', async (req, res) => {
   try {
     const { token } = req.query;
     if (!token) return res.status(400).json({ message: 'Verification token required' });
@@ -113,7 +106,34 @@ router.get('/verify', async (req, res, next) => {
 
     return res.json({ message: 'Email successfully verified!' });
   } catch (err) {
-    next(err);
+    return res.status(500).json({ message: 'Verification error' });
+  }
+});
+
+// List all users (admin / overview)
+router.get('/users', async (req, res) => {
+  try {
+    const users = await User.find({}).select('-passwordHash');
+    return res.json(users);
+  } catch (err) {
+    return res.status(500).json({ message: 'Failed to fetch users', error: err.message });
+  }
+});
+
+// Full database summary
+router.get('/database-summary', async (req, res) => {
+  try {
+    const users = await User.find({}).select('-passwordHash');
+    const collections = await User.db.db.listCollections().toArray();
+    const summary = {
+      databaseName: User.db.name,
+      collections: collections.map(c => c.name),
+      totalUsers: users.length,
+      users: users
+    };
+    return res.json(summary);
+  } catch (err) {
+    return res.status(500).json({ message: 'Failed to fetch database summary', error: err.message });
   }
 });
 
