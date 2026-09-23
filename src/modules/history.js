@@ -8,7 +8,9 @@ export async function fetchHistory() {
       headers: { 'Authorization': `Bearer ${auth.token}` }
     });
     if (res.ok) {
-      return await res.json();
+      const body = await res.json();
+      // Normalize: handle both flat array (legacy) and { data, pagination } shapes
+      return Array.isArray(body) ? body : (body.data ?? []);
     }
   } catch (err) {
     console.warn('History fetch failed');

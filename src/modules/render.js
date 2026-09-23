@@ -3,6 +3,17 @@ import { CURRENCY_SYMBOLS, INDIAN_STATES, STANDARD_UNITS } from './config.js';
 import { calculateTotals, getExportNote } from './tax.js';
 import { generateBarcodeSvg, generateQrCodeSvg } from './barcodeQr.js';
 
+/**
+ * Escapes HTML special characters in user-provided strings before injecting into innerHTML.
+ * Prevents XSS when rendering user data (invoice numbers, company names, etc.) in templates.
+ */
+function sanitizeText(str) {
+  if (str === null || str === undefined) return '';
+  const div = document.createElement('div');
+  div.textContent = String(str);
+  return div.innerHTML;
+}
+
 export function applyTheme() {
   document.documentElement.style.setProperty('--accent', state.themeColor || '#10b981');
   document.documentElement.style.setProperty('--accent-glow', (state.themeColor || '#10b981') + '33');
@@ -42,12 +53,12 @@ export function renderItemsEditor(elements, removeItem, updateItem) {
           </div>
         </div>
         
-        <input type="text" placeholder="Item Name / Description" value="${item.description || ''}" data-id="${item.id}" data-field="description" class="glass-input item-field">
+        <input type="text" placeholder="Item Name / Description" value="${sanitizeText(item.description || '')}" data-id="${item.id}" data-field="description" class="glass-input item-field">
         
         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
           <div>
             <label style="font-size: 9px; margin-bottom: 2px;">HSN/SAC</label>
-            <input type="text" placeholder="HSN Code" value="${item.hsnCode || ''}" data-id="${item.id}" data-field="hsnCode" class="glass-input item-field" style="padding: 6px 8px; font-size: 12px;">
+            <input type="text" placeholder="HSN Code" value="${sanitizeText(item.hsnCode || '')}" data-id="${item.id}" data-field="hsnCode" class="glass-input item-field" style="padding: 6px 8px; font-size: 12px;">
           </div>
           <div>
             <label style="font-size: 9px; margin-bottom: 2px;">Qty</label>
@@ -1008,10 +1019,10 @@ export function renderHistory(elements, items, onSelect, onDelete) {
     el.className = 'history-item';
     el.innerHTML = `
       <div class="history-item-info">
-        <p>${item.invoiceNumber || 'Invoice'}</p>
-        <span>${item.invoiceDate || ''} • ${formatCurrency(item.grandTotal || item.subtotal || 0, item.currency || 'INR')}</span>
+        <p>${sanitizeText(item.invoiceNumber || 'Invoice')}</p>
+        <span>${sanitizeText(item.invoiceDate || '')} • ${formatCurrency(item.grandTotal || item.subtotal || 0, item.currency || 'INR')}</span>
       </div>
-      <button class="btn btn-ghost history-delete-btn" data-id="${item._id || item.id}">
+      <button class="btn btn-ghost history-delete-btn" data-id="${sanitizeText(item._id || item.id)}">
         <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
       </button>
     `;

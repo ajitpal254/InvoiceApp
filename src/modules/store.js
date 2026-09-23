@@ -1,4 +1,4 @@
-import { STORAGE_KEY, TOKEN_KEY, API_URL } from './config.js';
+import { STORAGE_KEY, TOKEN_KEY, LAST_ACTIVE_KEY, TOKEN_EXPIRY_MS, API_URL } from './config.js';
 import { calculateTotals } from './tax.js';
 import { PRESETS } from './presets.js';
 
@@ -132,12 +132,35 @@ export let state = {
   signatoryTitle: 'Authorised Signatory'
 };
 
+/**
+ * Check if stored token has expired due to 30-day inactivity.
+ * Returns true if expired (token should be cleared).
+ */
+function isTokenExpiredByInactivity() {
+  const lastActive = localStorage.getItem(LAST_ACTIVE_KEY);
+  if (!lastActive) return false;
+  return (Date.now() - parseInt(lastActive, 10)) > TOKEN_EXPIRY_MS;
+}
+
+if (isTokenExpiredByInactivity()) {
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(LAST_ACTIVE_KEY);
+  localStorage.removeItem('nova_user_name');
+}
+
 export let auth = {
   token: localStorage.getItem(TOKEN_KEY),
   username: localStorage.getItem('nova_user_name'),
   isSignup: false,
   isVerified: false
 };
+
+/** Call on user activity (login, page interaction) to refresh inactivity timer */
+export function touchActivity() {
+  if (auth.token) {
+    localStorage.setItem(LAST_ACTIVE_KEY, String(Date.now()));
+  }
+}
 
 export function saveLocalState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));

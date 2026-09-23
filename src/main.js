@@ -1,5 +1,5 @@
 import './style.css';
-import { state, auth, saveLocalState, loadLocalState, loadPreset, saveRemoteState, resetState } from './modules/store.js';
+import { state, auth, saveLocalState, loadLocalState, loadPreset, saveRemoteState, resetState, touchActivity } from './modules/store.js';
 import { render, renderPreview, syncAuthUI, renderHistory, syncFormInputs } from './modules/render.js';
 import { login, register, logout, handleUrlVerification, fetchProfile } from './modules/auth.js';
 import { fetchHistory, deleteInvoice, loadInvoiceFromData } from './modules/history.js';
@@ -43,7 +43,8 @@ function bindEvents() {
     } else {
       renderPreview(elements); 
     }
-    saveLocalState(); 
+    saveLocalState();
+    touchActivity();
   };
 
   // Document Type Switching Pills
