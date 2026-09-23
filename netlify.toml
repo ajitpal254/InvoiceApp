@@ -7,8 +7,17 @@
   NODE_VERSION = "20"
 
 [functions]
+  directory = "netlify/functions"
   node_bundler = "esbuild"
-  included_files = ["server/**"]
+  included_files = [
+    "server/**",
+    "server/config/**",
+    "server/middleware/**",
+    "server/models/**",
+    "server/routes/**",
+    "server/utils/**",
+    "server/validation/**"
+  ]
 
 # Redirect API calls to Netlify Serverless Function
 [[redirects]]

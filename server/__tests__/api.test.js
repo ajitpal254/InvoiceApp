@@ -17,7 +17,7 @@ describe('API Security & Endpoints', () => {
     const res = await request(app).get('/api/health');
     expect(res.status).toBeOneOf([200, 503]);
     expect(res.body).toHaveProperty('status');
-    expect(res.body).toHaveProperty('service', 'Ouvra Billing API');
+    expect(res.body).toHaveProperty('service', 'nova-invoice API');
     expect(res.body).toHaveProperty('database');
   });
 

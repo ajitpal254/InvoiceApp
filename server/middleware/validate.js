@@ -5,11 +5,12 @@ export function validate(schema, source = 'body') {
       req[source] = parsed;
       next();
     } catch (err) {
-      if (err.errors) {
+      const errors = err.errors || err.issues;
+      if (errors && Array.isArray(errors)) {
         return res.status(400).json({
           message: 'Validation failed',
-          errors: err.errors.map(e => ({
-            field: e.path.join('.'),
+          errors: errors.map(e => ({
+            field: Array.isArray(e.path) ? e.path.join('.') : String(e.path || ''),
             message: e.message
           }))
         });

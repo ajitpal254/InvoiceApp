@@ -3,17 +3,6 @@ import { CURRENCY_SYMBOLS, INDIAN_STATES, STANDARD_UNITS } from './config.js';
 import { calculateTotals, getExportNote } from './tax.js';
 import { generateBarcodeSvg, generateQrCodeSvg } from './barcodeQr.js';
 
-/**
- * Escapes HTML special characters in user-provided strings before injecting into innerHTML.
- * Prevents XSS when rendering user data (invoice numbers, company names, etc.) in templates.
- */
-function sanitizeText(str) {
-  if (str === null || str === undefined) return '';
-  const div = document.createElement('div');
-  div.textContent = String(str);
-  return div.innerHTML;
-}
-
 export function applyTheme() {
   document.documentElement.style.setProperty('--accent', state.themeColor || '#10b981');
   document.documentElement.style.setProperty('--accent-glow', (state.themeColor || '#10b981') + '33');
@@ -22,7 +11,7 @@ export function applyTheme() {
 export function formatCurrency(num, curr = state.currency) {
   const symbol = CURRENCY_SYMBOLS[curr] || '';
   if (isNaN(num) || num === 0) return `${symbol}0.00`;
-  
+
   if (curr === 'INR') {
     return `${symbol}${num.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   }
@@ -38,7 +27,7 @@ export function renderItemsEditor(elements, removeItem, updateItem) {
     row.className = 'glass-card fade-in item-row-card';
     row.style.padding = '12px';
     row.style.marginBottom = '10px';
-    
+
     row.innerHTML = `
       <div style="display: flex; flex-direction: column; gap: 8px;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -53,12 +42,12 @@ export function renderItemsEditor(elements, removeItem, updateItem) {
           </div>
         </div>
         
-        <input type="text" placeholder="Item Name / Description" value="${sanitizeText(item.description || '')}" data-id="${item.id}" data-field="description" class="glass-input item-field">
+        <input type="text" placeholder="Item Name / Description" value="${item.description || ''}" data-id="${item.id}" data-field="description" class="glass-input item-field">
         
         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
           <div>
             <label style="font-size: 9px; margin-bottom: 2px;">HSN/SAC</label>
-            <input type="text" placeholder="HSN Code" value="${sanitizeText(item.hsnCode || '')}" data-id="${item.id}" data-field="hsnCode" class="glass-input item-field" style="padding: 6px 8px; font-size: 12px;">
+            <input type="text" placeholder="HSN Code" value="${item.hsnCode || ''}" data-id="${item.id}" data-field="hsnCode" class="glass-input item-field" style="padding: 6px 8px; font-size: 12px;">
           </div>
           <div>
             <label style="font-size: 9px; margin-bottom: 2px;">Qty</label>
@@ -126,7 +115,7 @@ export function renderItemsEditor(elements, removeItem, updateItem) {
 function renderGstInvoice(totals) {
   const symbol = CURRENCY_SYMBOLS[state.currency] || '₹';
   const hasBankDetails = Boolean(state.bankName || state.bankAccountNo || state.bankIfsc);
-  
+
   return `
     <div class="print-doc gst-tax-invoice">
       <!-- Top header line with state code and title -->
@@ -235,13 +224,13 @@ function renderGstInvoice(totals) {
         </thead>
         <tbody>
           ${state.items.map((item, idx) => {
-            const itemQty = parseFloat(item.qty) || 0;
-            const itemPrice = parseFloat(item.price) || 0;
-            const itemDisc = parseFloat(item.discRate) || 0;
-            const itemTax = item.taxRate ?? state.taxRate ?? 18;
-            const netAmount = (itemQty * itemPrice) * (1 - itemDisc / 100);
+    const itemQty = parseFloat(item.qty) || 0;
+    const itemPrice = parseFloat(item.price) || 0;
+    const itemDisc = parseFloat(item.discRate) || 0;
+    const itemTax = item.taxRate ?? state.taxRate ?? 18;
+    const netAmount = (itemQty * itemPrice) * (1 - itemDisc / 100);
 
-            return `
+    return `
               <tr>
                 <td style="text-align: center;">${idx + 1}</td>
                 <td class="item-name">${item.description || ''}</td>
@@ -254,7 +243,7 @@ function renderGstInvoice(totals) {
                 <td style="text-align: right; font-weight: 600;">${netAmount > 0 ? netAmount.toFixed(2) : ''}</td>
               </tr>
             `;
-          }).join('')}
+  }).join('')}
           ${Array(Math.max(0, 3 - state.items.length)).fill(0).map(() => `
             <tr class="filler-row">
               <td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
@@ -529,12 +518,12 @@ function renderProformaInvoice(totals) {
         </thead>
         <tbody>
           ${state.items.map((item, idx) => {
-            const qty = parseFloat(item.qty) || 0;
-            const price = parseFloat(item.price) || 0;
-            const amount = qty * price;
-            const isHighlighted = item.highlighted ? 'class="row-highlighted"' : '';
+    const qty = parseFloat(item.qty) || 0;
+    const price = parseFloat(item.price) || 0;
+    const amount = qty * price;
+    const isHighlighted = item.highlighted ? 'class="row-highlighted"' : '';
 
-            return `
+    return `
               <tr ${isHighlighted}>
                 <td style="text-align: center; font-weight: 700;">${idx + 1}</td>
                 <td class="item-desc-cell">${item.description || ''}</td>
@@ -544,7 +533,7 @@ function renderProformaInvoice(totals) {
                 <td style="text-align: right; font-weight: 700;">${amount > 0 ? amount.toFixed(2) : ''}</td>
               </tr>
             `;
-          }).join('')}
+  }).join('')}
         </tbody>
       </table>
 
@@ -687,11 +676,11 @@ function renderCommercialInvoice(totals) {
         </thead>
         <tbody>
           ${state.items.map((item, idx) => {
-            const qty = parseFloat(item.qty) || 0;
-            const price = parseFloat(item.price) || 0;
-            const amount = qty * price;
+    const qty = parseFloat(item.qty) || 0;
+    const price = parseFloat(item.price) || 0;
+    const amount = qty * price;
 
-            return `
+    return `
               <tr>
                 <td style="text-align: center;">${idx + 1}</td>
                 <td style="text-align: center;">${item.hsnCode || ''}</td>
@@ -701,7 +690,7 @@ function renderCommercialInvoice(totals) {
                 <td style="text-align: right; font-weight: 700;">${amount > 0 ? amount.toFixed(2) : ''}</td>
               </tr>
             `;
-          }).join('')}
+  }).join('')}
         </tbody>
         <tfoot>
           <tr>
@@ -781,8 +770,8 @@ function renderStandardInvoice(totals) {
         </thead>
         <tbody>
           ${state.items.map(item => {
-            const total = (parseFloat(item.qty) || 0) * (parseFloat(item.price) || 0);
-            return `
+    const total = (parseFloat(item.qty) || 0) * (parseFloat(item.price) || 0);
+    return `
               <tr style="border-bottom: 1px solid #f1f5f9;">
                 <td style="padding: 12px 10px;">${item.description || ''}</td>
                 <td style="padding: 12px 10px; text-align: center;">${item.qty}</td>
@@ -790,7 +779,7 @@ function renderStandardInvoice(totals) {
                 <td style="padding: 12px 10px; text-align: right; font-weight: 600;">${formatCurrency(total, state.currency)}</td>
               </tr>
             `;
-          }).join('')}
+  }).join('')}
         </tbody>
       </table>
 
@@ -869,7 +858,7 @@ export function renderPreview(elements) {
 // ----------------------------------------------------
 export function syncFormInputs(elements) {
   if (elements.docTypeSelect) elements.docTypeSelect.value = state.docType || 'gst_invoice';
-  
+
   // Highlight active doc tab
   document.querySelectorAll('.doc-type-pill').forEach(pill => {
     pill.classList.toggle('active', pill.dataset.doctype === state.docType);
@@ -1019,10 +1008,10 @@ export function renderHistory(elements, items, onSelect, onDelete) {
     el.className = 'history-item';
     el.innerHTML = `
       <div class="history-item-info">
-        <p>${sanitizeText(item.invoiceNumber || 'Invoice')}</p>
-        <span>${sanitizeText(item.invoiceDate || '')} • ${formatCurrency(item.grandTotal || item.subtotal || 0, item.currency || 'INR')}</span>
+        <p>${item.invoiceNumber || 'Invoice'}</p>
+        <span>${item.invoiceDate || ''} • ${formatCurrency(item.grandTotal || item.subtotal || 0, item.currency || 'INR')}</span>
       </div>
-      <button class="btn btn-ghost history-delete-btn" data-id="${sanitizeText(item._id || item.id)}">
+      <button class="btn btn-ghost history-delete-btn" data-id="${item._id || item.id}">
         <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
       </button>
     `;
@@ -1038,4 +1027,4 @@ export function renderHistory(elements, items, onSelect, onDelete) {
   if (window.lucide) window.lucide.createIcons();
 }
 
-export function updateRegionDropdown() {}
+export function updateRegionDropdown() { }

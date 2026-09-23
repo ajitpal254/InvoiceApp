@@ -1,11 +1,11 @@
-import { STORAGE_KEY, TOKEN_KEY, LAST_ACTIVE_KEY, TOKEN_EXPIRY_MS, API_URL } from './config.js';
+import { STORAGE_KEY, TOKEN_KEY, API_URL } from './config.js';
 import { calculateTotals } from './tax.js';
 import { PRESETS } from './presets.js';
 
 export let state = {
   // Document Type
   docType: 'gst_invoice', // 'gst_invoice' | 'eway_bill' | 'proforma_invoice' | 'commercial_invoice' | 'standard_invoice'
-  
+
   // Exporter / Company Info
   companyName: '',
   dealsIn: '',
@@ -18,7 +18,7 @@ export let state = {
   senderEmail: '',
   senderInfo: '',
   iecNo: '',
-  
+
   // Document Header
   billTitle: 'TAX INVOICE',
   billSubtype: 'CREDIT BILL',
@@ -27,7 +27,7 @@ export let state = {
   invoiceDate: new Date().toISOString().split('T')[0],
   orderNo: '',
   orderDate: '',
-  
+
   // Billed To / Recipient
   recipientName: '',
   recipientCountry: '',
@@ -36,12 +36,12 @@ export let state = {
   recipientGstin: '',
   recipientPan: '',
   recipientInfo: '',
-  
+
   // Consignee (if different)
   consigneeName: '',
   consigneeInfo: '',
   consigneeStateCode: '',
-  
+
   // Logistics & Supply
   placeOfSupply: '',
   placeOfDelivery: '',
@@ -53,7 +53,7 @@ export let state = {
   grDate: '',
   pvtMark: '',
   reverseCharge: 'N',
-  
+
   // e-Way Bill specifics
   ewayBillNo: '',
   ewayBillDate: '',
@@ -76,7 +76,7 @@ export let state = {
   enteredBy: '',
   cewbNo: '0',
   multiVehInfo: '',
-  
+
   // International / Customs Export specifics
   exportHeaderNote: '',
   buyerOrderNo: '',
@@ -106,12 +106,12 @@ export let state = {
   shippingBillNo: '',
   shippingBillDate: '',
   remarks: '',
-  
+
   // Items
   items: [
     { id: 1, description: '', hsnCode: '', qty: 1, unit: 'PCS', price: 0, discRate: 0, taxRate: 18 }
   ],
-  
+
   // General Pricing & Tax
   currency: 'INR',
   taxRate: 18,
@@ -120,7 +120,7 @@ export let state = {
   discountType: 'amount',
   discountValue: 0,
   themeColor: '#10b981',
-  
+
   // Banking & Terms
   bankName: '',
   bankAccountNo: '',
@@ -132,35 +132,12 @@ export let state = {
   signatoryTitle: 'Authorised Signatory'
 };
 
-/**
- * Check if stored token has expired due to 30-day inactivity.
- * Returns true if expired (token should be cleared).
- */
-function isTokenExpiredByInactivity() {
-  const lastActive = localStorage.getItem(LAST_ACTIVE_KEY);
-  if (!lastActive) return false;
-  return (Date.now() - parseInt(lastActive, 10)) > TOKEN_EXPIRY_MS;
-}
-
-if (isTokenExpiredByInactivity()) {
-  localStorage.removeItem(TOKEN_KEY);
-  localStorage.removeItem(LAST_ACTIVE_KEY);
-  localStorage.removeItem('nova_user_name');
-}
-
 export let auth = {
   token: localStorage.getItem(TOKEN_KEY),
   username: localStorage.getItem('nova_user_name'),
   isSignup: false,
   isVerified: false
 };
-
-/** Call on user activity (login, page interaction) to refresh inactivity timer */
-export function touchActivity() {
-  if (auth.token) {
-    localStorage.setItem(LAST_ACTIVE_KEY, String(Date.now()));
-  }
-}
 
 export function saveLocalState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -225,7 +202,7 @@ export async function saveRemoteState() {
     const totals = calculateTotals();
     await fetch(API_URL + '/invoices', {
       method: 'POST',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${auth.token}`
       },

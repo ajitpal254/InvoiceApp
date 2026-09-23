@@ -1,5 +1,5 @@
 import './style.css';
-import { state, auth, saveLocalState, loadLocalState, loadPreset, saveRemoteState, resetState, touchActivity } from './modules/store.js';
+import { state, auth, saveLocalState, loadLocalState, loadPreset, saveRemoteState, resetState } from './modules/store.js';
 import { render, renderPreview, syncAuthUI, renderHistory, syncFormInputs } from './modules/render.js';
 import { login, register, logout, handleUrlVerification, fetchProfile } from './modules/auth.js';
 import { fetchHistory, deleteInvoice, loadInvoiceFromData } from './modules/history.js';
@@ -9,17 +9,17 @@ import { elements } from './modules/elements.js';
 async function init() {
   loadLocalState();
   bindEvents();
-  
+
   const params = new URLSearchParams(window.location.search);
   if (params.has('token')) {
-     await handleUrlVerification(params.get('token'));
+    await handleUrlVerification(params.get('token'));
   }
 
   if (auth.token) {
     await fetchProfile();
     await reloadHistory();
   }
-  
+
   render(elements, removeItem, updateItem);
   syncAuthUI(elements);
 }
@@ -36,15 +36,14 @@ async function reloadHistory() {
 }
 
 function bindEvents() {
-  const sync = (field, val) => { 
-    state[field] = val; 
+  const sync = (field, val) => {
+    state[field] = val;
     if (field === 'currency' || field === 'unitType') {
       render(elements, removeItem, updateItem);
     } else {
-      renderPreview(elements); 
+      renderPreview(elements);
     }
     saveLocalState();
-    touchActivity();
   };
 
   // Document Type Switching Pills
@@ -238,11 +237,11 @@ function bindEvents() {
   bindInput(elements.paymentInput, 'paymentInfo');
 
   if (elements.themeColor) {
-    elements.themeColor.addEventListener('input', e => { 
-      state.themeColor = e.target.value; 
+    elements.themeColor.addEventListener('input', e => {
+      state.themeColor = e.target.value;
       if (elements.colorValue) elements.colorValue.textContent = e.target.value.toUpperCase();
-      renderPreview(elements); 
-      saveLocalState(); 
+      renderPreview(elements);
+      saveLocalState();
     });
   }
 

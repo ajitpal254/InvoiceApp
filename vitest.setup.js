@@ -7,23 +7,38 @@
  */
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
+import { beforeAll, afterAll } from 'vitest';
 
 let mongod;
 
 export async function setup() {
-  mongod = await MongoMemoryServer.create();
-  const uri = mongod.getUri();
-  process.env.MONGODB_URI = uri;
-
-  await mongoose.connect(uri, {
-    bufferCommands: false,
-    serverSelectionTimeoutMS: 5000,
-  });
+  if (!mongod) {
+    mongod = await MongoMemoryServer.create();
+    const uri = mongod.getUri();
+    process.env.MONGODB_URI = uri;
+  }
+  if (mongoose.connection.readyState === 0) {
+    await mongoose.connect(process.env.MONGODB_URI, {
+      bufferCommands: false,
+      serverSelectionTimeoutMS: 5000,
+    });
+  }
 }
 
 export async function teardown() {
-  await mongoose.disconnect();
+  if (mongoose.connection.readyState !== 0) {
+    await mongoose.disconnect();
+  }
   if (mongod) {
     await mongod.stop();
+    mongod = null;
   }
 }
+
+beforeAll(async () => {
+  await setup();
+});
+
+afterAll(async () => {
+  await teardown();
+});

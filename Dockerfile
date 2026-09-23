@@ -1,4 +1,4 @@
-# Multi-stage Docker build for Ouvra Billing
+# Multi-stage Docker build for nova-invoice API
 FROM node:20-alpine AS builder
 
 WORKDIR /app
