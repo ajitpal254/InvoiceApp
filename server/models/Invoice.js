@@ -36,7 +36,13 @@ const invoiceSchema = new mongoose.Schema({
     default: 18
   },
   subtotal: Number,
+  taxableAmount: Number,
   taxAmount: Number,
+  igstAmount: Number,
+  cgstAmount: Number,
+  sgstAmount: Number,
+  isIgst: Boolean,
+  roundOff: Number,
   grandTotal: Number,
   items: [mongoose.Schema.Types.Mixed],
   // Store full state snapshot for faithful reload
@@ -45,5 +51,8 @@ const invoiceSchema = new mongoose.Schema({
   timestamps: true,
   collection: 'invoices'
 });
+
+invoiceSchema.index({ userId: 1, createdAt: -1 });
+invoiceSchema.index({ invoiceNumber: 1 });
 
 export const Invoice = mongoose.model('Invoice', invoiceSchema, 'invoices');
